@@ -46,12 +46,14 @@ import { token } from '@coral-xyz/anchor/dist/cjs/utils'
 // Define a proper context type
 interface GlobalContextType {
   buyTicket: (lotteryPubkeyStr: string, count: number) => Promise<void>;
+  joinToLottery: (lotteryPDAStr: string, userSpotIndex: number) => Promise<void>;
   getUserData: () => Promise<any | null>; 
   getLotteryData: (lotteryPDAStr: string) => Promise<any | null>;
 }
 
 export const GlobalContext = createContext<GlobalContextType>({
   buyTicket: async (lotteryPubkeyStr: string, count: number) => {},
+  joinToLottery: async (lotteryPDAStr: string, userSpotIndex: number) => {},
   getUserData: async () => null,
   getLotteryData: async (lotteryPDAStr: string) => null,
 });
@@ -158,11 +160,35 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
       console.log(txHash,"buyticket txHash");
   }
 
+
+  const joinToLottery = async(lotteryPDAStr: string, userSpotIndex: number) => {
+    if (!wallet.publicKey) return
+    let [userPDA, bump] = PublicKey.findProgramAddressSync([Buffer.from("USER_INFO_SEED"), wallet.publicKey.toBuffer()], PROGRAM_ID);
+    console.log(lotteryPDAStr,"****************")
+    let lotteryPDA = new web3.PublicKey(lotteryPDAStr);
+
+    const txHash = await program?.methods.joinLottery(userSpotIndex)
+      .accounts({
+        lottery: lotteryPDA,
+        user: userPDA,
+        systemProgram: web3.SystemProgram.programId
+      })
+      .rpc()
+      .catch((error) => {
+        console.log(error, " in joinlottery");
+      });
+
+      console.log(txHash,"txHash");
+  }
+
   const getUserData = async() => {
     if (!wallet.publicKey) return
     let [userPDA, bump] = PublicKey.findProgramAddressSync([Buffer.from("USER_INFO_SEED"), wallet.publicKey.toBuffer()], PROGRAM_ID);
-    let userdata = await program?.account.user.fetch(userPDA);
+    const accountInfo = await connection.getAccountInfo(userPDA);
     
+    if (!accountInfo){ return null;}
+    let userdata = await program?.account.user.fetch(userPDA);
+    console.log(userdata,"*****")
     return userdata;
   }
 
@@ -173,7 +199,7 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
   }
 
   return (
-    <GlobalContext.Provider value={{ buyTicket, getUserData, getLotteryData}}>
+    <GlobalContext.Provider value={{ buyTicket, getUserData, getLotteryData, joinToLottery}}>
       {children}
     </GlobalContext.Provider>
   )

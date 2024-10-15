@@ -18,6 +18,7 @@ import { InfoModal } from './info_modal'
 import {TicketModal} from './ticket_modal'
 import {TimeFrame} from '../../anchor/constants';
 
+
 const card_style = {
   borderRadius: '20px',
   backgroundColor: '#1c1b20',
@@ -62,17 +63,21 @@ export default function GameCard({ lottery, source }: any) {
 
   const wallet = useWallet()
 
-  const { buyTicket, getUserData, getLotteryData} = useGlobalState()
+  const { buyTicket, getUserData, getLotteryData, joinToLottery} = useGlobalState()
 
   const joinLottery = async () => {
     let userData = await getUserData();
     let lotteryData = await getLotteryData(lottery.publicKey.toString());
+    console.log(userData,"in joinlottery")
+    console.log(lotteryData);
     let userSpotIndex = await TimeFrame.findIndex(timeframe => timeframe == Number(lotteryData.timeFrame));
     
-    let userLotterySpot = userData.spot[userSpotIndex];
+    let userLotterySpot = userData?.spot[userSpotIndex];
     if(userLotterySpot > 0){
       console.log("have ticket")
-    } else if (userLotterySpot == 0){
+      let lotteryId = lotteryData.id;
+      joinToLottery(lottery.publicKey.toString(), userSpotIndex);
+    } else {
 
       setOpenTicketModal(true); 
       setSelectLottery(lottery.publicKey.toString())
