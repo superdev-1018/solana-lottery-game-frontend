@@ -68,8 +68,8 @@ export default defineConfig(async () => {
         minify: true,
         inject: {
           data: {
-            title: 'Epics dApp boilerplate',
-            domain: 'dapp-boilerplate.epics.dev',
+            title: 'Pool Party Lottery',
+            domain: 'dapp-poolparty.dev',
             themeColor: '#ffffff',
             safariColor: '#39a845',
             twitterAccount: '@EpicsDAO',

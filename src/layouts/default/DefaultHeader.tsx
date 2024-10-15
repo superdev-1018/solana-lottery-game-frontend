@@ -28,8 +28,12 @@ import TelegramIcon from '@mui/icons-material/Telegram'
 import  * as style from '@/assets'
 import '@/assets/style/CustomWalletAdapter.css'
 import { useWallet } from '@solana/wallet-adapter-react'
+import {ReferralModal} from '../../components/main/referral_modal'
+import { useState } from 'react'
 
 export default function DefaultHeader() {
+  const [openModal, setOpenModal] = useState(false)
+  const handleClose = () => setOpenModal(false)
   const colorMode = useRecoilValue(colorModeState)
   const navigate = useNavigate()
   const theme = useTheme()
@@ -57,7 +61,7 @@ export default function DefaultHeader() {
             <Box display={'flex'} flexDirection={"column"} sx={{alignItems:smDisplay?'center':'flex-end', justifyContent: 'center', height: '100%',}}>
             <WalletMultiButton/>
             {connected ? (
-            <Stack sx={{ width: '250px', textAlign: 'right' }}>
+            <Stack sx={{ width: '250px', textAlign: 'right',marginY:'6px', paddingX:'2px',backgroundColor:'#512da8', borderRadius:'5px'}}>
                 <Link 
                     href="#" 
                     sx={{
@@ -65,7 +69,9 @@ export default function DefaultHeader() {
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',  
                         textOverflow: 'ellipsis',
+                        color:'white'
                     }}
+                    onClick={() => setOpenModal(true)}
                 >
                     Referral Link: https://poolparty/kjhiucis
                 </Link>
@@ -75,6 +81,8 @@ export default function DefaultHeader() {
           </Grid>
         </Grid>
       </Container>
+
+      <ReferralModal openModal={openModal} handleClose={handleClose}/>
     </>
   )
 }

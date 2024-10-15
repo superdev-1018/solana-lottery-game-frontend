@@ -14,7 +14,7 @@ export default function AppLoading() {
         >
           <Grid item xs>
             <Typography align="center">
-              <CircularProgress size={24} />
+              <CircularProgress size={30} />
             </Typography>
           </Grid>
         </Grid>

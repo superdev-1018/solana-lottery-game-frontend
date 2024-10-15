@@ -45,12 +45,16 @@ import { token } from '@coral-xyz/anchor/dist/cjs/utils'
 
 // Define a proper context type
 interface GlobalContextType {
-  buyTicket: (lotteryType: number) => Promise<void>
+  buyTicket: (lotteryPubkeyStr: string, count: number) => Promise<void>;
+  getUserData: () => Promise<any | null>; 
+  getLotteryData: (lotteryPDAStr: string) => Promise<any | null>;
 }
 
 export const GlobalContext = createContext<GlobalContextType>({
-  buyTicket: async () => {},
-})
+  buyTicket: async (lotteryPubkeyStr: string, count: number) => {},
+  getUserData: async () => null,
+  getLotteryData: async (lotteryPDAStr: string) => null,
+});
 
 interface GlobalStateProps {
   children: ReactNode
@@ -93,69 +97,8 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
     }
   }, [connection, wallet])
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//         if (!wallet?.publicKey || !program) return;
 
-//         const globalAccount = await program.account.globalAccount.all();
-
-//         if (!globalAccount || globalAccount.length === 0) {
-//             console.log('App is not initialized');
-//             if (wallet.publicKey.toString() === ADMIN_KEY.toString()) {
-//                 console.log("here");
-//                 await initialize();
-
-//                 const globalAccountData = await program?.account.globalAccount.fetch(globalAccountPDA);
-//                 setGlobalAccount(globalAccountData);
-//                 setIsInitialized(true);
-//                 setAdmin(true);
-
-//               }
-//             } else {
-//           await setInitialLottery(1);
-//             setGlobalAccount(globalAccount);
-//         }
-//     };
-
-//     fetchData();
-// }, [wallet, program]);
-
-
-  // const initialize = async () => {
-  //   console.log('Initializing...');
-  //   if (!wallet.publicKey) return;
-  //   try {
-
-  //     let poolATA =  await getOrCreateAssociatedTokenAccount(connection, POOL_KEYPAIR, USDT_MINT_ADDRESS, POOL_KEYPAIR.publicKey);
-  //     let withdrawATA = await getOrCreateAssociatedTokenAccount(connection, TAX_KEYPAIR, USDT_MINT_ADDRESS, TAX_KEYPAIR.publicKey);
-  //     const transaction = await program?.methods.initialize()
-  //     .accounts({
-  //         initializer: ADMIN_KEYPAIR.publicKey,
-  //         globalAccount: globalAccountPDA,
-  //         poolTokenAccount: poolATA.address,
-  //         lotteryPdakeyInfo: lotteryKeyInfoPDA,
-  //         withdrawTokenAccount: withdrawATA.address,
-  //         systemProgram: SystemProgram.programId,
-  //         tokenProgram: TOKEN_PROGRAM_ID,
-  //     })
-  //     .signers([ADMIN_KEYPAIR])
-  //     .transaction(); 
-  
-  //   if(!transaction) return;
-  //   transaction.feePayer = ADMIN_KEYPAIR.publicKey;
-  // console.log(transaction,"transaction")
-  //   const txHash = await connection.sendTransaction(transaction, [ADMIN_KEYPAIR]);
-    
-  //   await connection.confirmTransaction(txHash,"finalized");
-  //     console.log(txHash, 'Transaction signature');
-  //   } catch (error) {
-  //     console.error('Transaction failed:', error);
-  //   }
-  // };
-
- 
-
-  const buyTicket = async (id: number) => {
+  const buyTicket = async (lotteryPubkeyStr: string, count: number) => {
     console.log('Buy Ticket Function')
     if (!wallet.publicKey) return
 
@@ -191,9 +134,9 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
     if ( !wallet.publicKey || !userAssociatedTokenAddress || !poolATA.address) return;
 
     const [userAccountPDA] = PublicKey.findProgramAddressSync([Buffer.from('USER_INFO_SEED'), wallet.publicKey.toBuffer()], PROGRAM_ID);
-    const [lotteryPDA] = PublicKey.findProgramAddressSync([Buffer.from('LOTTERY_INFO_SEED'), ADMIN_KEY.toBuffer(), new Uint8Array([id])], PROGRAM_ID);
+    const lotteryPDA = new web3.PublicKey(lotteryPubkeyStr)
     console.log(lotteryPDA,"Lottery PDA");
-    const txHash = await program?.methods.buyTicket()
+    const txHash = await program?.methods.buyTicket(count)
       .accounts({
         buyer: wallet.publicKey,
         globalAccount: globalAccountPDA,
@@ -208,27 +151,29 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
       .catch((error) => {
         console.log(error,"buy ticket error");
       })
+
+      let [userPDA, bump] = PublicKey.findProgramAddressSync([Buffer.from("USER_INFO_SEED"), wallet.publicKey.toBuffer()], PROGRAM_ID);
+      let userdata = await program?.account.user.fetch(userPDA);
+      console.log(userdata,"*********************")
+      console.log(txHash,"buyticket txHash");
   }
 
-  // const endLottery = async (id: number) => {
-  //   if (!wallet.publicKey) return
+  const getUserData = async() => {
+    if (!wallet.publicKey) return
+    let [userPDA, bump] = PublicKey.findProgramAddressSync([Buffer.from("USER_INFO_SEED"), wallet.publicKey.toBuffer()], PROGRAM_ID);
+    let userdata = await program?.account.user.fetch(userPDA);
+    
+    return userdata;
+  }
 
-  //   const [lotteryPDA] = PublicKey.findProgramAddressSync([Buffer.from('LOTTERY_INFO_SEED'), ADMIN_KEY.toBuffer(), new Uint8Array([id])], PROGRAM_ID);
-
-  //   const txHash = await program?.methods
-  //     .endLottery()
-  //     .accounts({
-  //       admin: ADMIN_KEY,
-  //       lottery: lotteryPDA,
-  //       poolTokenAccount: poolATA?.address,
-  //       taxTokenAccount: withdrawATA?.address,
-  //     })
-  //     .rpc()
-  // }
-
+  const getLotteryData = async (lotteryPDAStr: string) => {
+    let lotteryPDA = new web3.PublicKey(lotteryPDAStr);
+    let lotteryData = await program?.account.lottery.fetch(lotteryPDA);
+    return lotteryData;
+  }
 
   return (
-    <GlobalContext.Provider value={{ buyTicket}}>
+    <GlobalContext.Provider value={{ buyTicket, getUserData, getLotteryData}}>
       {children}
     </GlobalContext.Provider>
   )

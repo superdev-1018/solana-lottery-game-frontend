@@ -138,7 +138,12 @@ export type Lottery = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "count",
+          "type": "u8"
+        }
+      ]
     },
     {
       "name": "endLottery",
@@ -288,6 +293,44 @@ export type Lottery = {
         }
       ],
       "args": []
+    },
+    {
+      "name": "getUserTicket",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "returns": "bool"
+    },
+    {
+      "name": "joinLottery",
+      "accounts": [
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -390,10 +433,7 @@ export type Lottery = {
           {
             "name": "participants",
             "type": {
-              "array": [
-                "publicKey",
-                30
-              ]
+              "vec": "publicKey"
             }
           },
           {
@@ -674,7 +714,12 @@ export const IDL: Lottery = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "count",
+          "type": "u8"
+        }
+      ]
     },
     {
       "name": "endLottery",
@@ -824,6 +869,44 @@ export const IDL: Lottery = {
         }
       ],
       "args": []
+    },
+    {
+      "name": "getUserTicket",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "returns": "bool"
+    },
+    {
+      "name": "joinLottery",
+      "accounts": [
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -926,10 +1009,7 @@ export const IDL: Lottery = {
           {
             "name": "participants",
             "type": {
-              "array": [
-                "publicKey",
-                30
-              ]
+              "vec": "publicKey"
             }
           },
           {

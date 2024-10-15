@@ -1,26 +1,14 @@
 import { useState, useEffect, useCallback, Key } from 'react'
-import { IdlAccounts, Program, AnchorProvider, web3 } from '@coral-xyz/anchor'
+import {Program} from '@coral-xyz/anchor'
 import { Lottery } from '@/anchor/idl'
 import {
   Container,
-  Box,
   Grid,
   Paper,
   Typography,
   useMediaQuery,
-  Chip,
-  Toolbar,
-  Tooltip,
-  IconButton,
   Link,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Modal,
 } from '@mui/material'
-import { RefreshRounded } from '@mui/icons-material'
-
 import { useTheme } from '@mui/material/styles'
 import DataLoading from '@/components/loading/DataLoading'
 import BlockLoading from '@/components/loading/BlockLoading'
@@ -33,17 +21,11 @@ import {
 } from '@/model/transaction/Transaction'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '@/store/wallet'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { useSnackbar } from 'notistack'
-
-import TransactionsList from '@/model/transaction/TransactionsList'
-import TransferForm from '@/model/transaction/TransferForm'
 import GameCard from '@/components/main/game_card'
 import * as imgList from "@/assets";
 import { useGlobalState } from '@/hooks/useGlobalState'
 import { getProgram } from '@/anchor/program'
-import { PublicKey } from '@solana/web3.js'
-import { BN } from "@coral-xyz/anchor"; 
 
 
 
@@ -55,7 +37,7 @@ export default function IndexPage() {
   const [transactionsWS, setTransactionsWS] =
     useState<TransactionWithSignature[]>()
   const [loading, setLoading] = useState(false)
-  const [lotteryList, setLotteryList] = useState<LotteryData[]>([]);
+  const [lotteryList, setLotteryList] = useState<any[]>([]);
   const [program, setProgram] = useState<Program<Lottery> | null>(null)
 
   const theme = useTheme()
@@ -77,7 +59,7 @@ export default function IndexPage() {
         const lotteryData = await program?.account.lottery.all();
 
         if (!lotteryData) return;
-        const openedLottery: LotteryData[] = lotteryData
+        const openedLottery = lotteryData
             .filter(lottery => lottery.account.state === 0)
             .map(lottery => ({
                 account: {
@@ -136,17 +118,17 @@ export default function IndexPage() {
           </Typography>
         </Paper>
         <Grid container spacing={{ xs: 2,md: 4 }} columns={{xs:12, sm:8, md: 12, lg: 20}} paddingTop={3}>
-          {/* {lotteryList.length > 0 ? lotteryList.map((lottery: LotteryData, index: number) => (
+          {lotteryList.length > 0 ? lotteryList.map((lottery: LotteryData, index: number) => (
             <Grid item xs={12} sm={4} md={4} lg={4} key={index}>
               <GameCard lottery = {lottery} source = {imgList.source.games[index]}/>
             </Grid>
-          )): null} */}
+          )): null}
 
-          {imgList.source.games.map((img, index) => (
+          {/* {imgList.source.games.map((img, index) => (
             <Grid item xs={12} sm={4} md={4} lg={4} key={index}>
               <GameCard  lottery={"lottery"} source = {img}/>
             </Grid>
-          ))}
+          ))} */}
         </Grid>
         <Paper elevation={3} sx={{ borderRadius: '5px', padding:"5px", marginTop: "30px", backgroundColor:'transparent'}}>
           <Typography variant="h3" sx={{fontFamily:'Roboto,sans-serif', fontSize:{xs:'15px', sm:'20px', md:'20px', lg:'24px', color:'white'}}}>

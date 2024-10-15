@@ -138,7 +138,12 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "count",
+          "type": "u8"
+        }
+      ]
     },
     {
       "name": "endLottery",
@@ -288,6 +293,44 @@
         }
       ],
       "args": []
+    },
+    {
+      "name": "getUserTicket",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "returns": "bool"
+    },
+    {
+      "name": "joinLottery",
+      "accounts": [
+        {
+          "name": "lottery",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -390,10 +433,7 @@
           {
             "name": "participants",
             "type": {
-              "array": [
-                "publicKey",
-                30
-              ]
+              "vec": "publicKey"
             }
           },
           {
@@ -533,6 +573,6 @@
     }
   ],
   "metadata": {
-    "address": "Ap8XTbitCnURVb5zoEHKMDnKGeGZ9NuktKBUPz4VVgC8"
+    "address": "XAoj6AeoTAyE2ALe2MEVw36Hy1GryJoPjoyfxCAdbL7"
   }
 }
