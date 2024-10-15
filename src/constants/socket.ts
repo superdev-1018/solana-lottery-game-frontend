@@ -1,0 +1,1 @@
+export const SOCKET_SERVER_URL = "https://localhost:4000"

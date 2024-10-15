@@ -1,0 +1,15 @@
+/* CustomWalletAdapter.css */
+.wallet-adapter-button {
+    /* background-color: #152b8f !important; */
+    color: white !important;
+    font-size: 16px !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    width: 250px;
+    justify-content: center;
+  }
+
+  .wallet-adapter-button-trigger {
+    color: #fff !important;
+    font-weight: bold !important;
+  }
