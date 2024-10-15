@@ -138,6 +138,8 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
     const [userAccountPDA] = PublicKey.findProgramAddressSync([Buffer.from('USER_INFO_SEED'), wallet.publicKey.toBuffer()], PROGRAM_ID);
     const lotteryPDA = new web3.PublicKey(lotteryPubkeyStr)
     console.log(lotteryPDA,"Lottery PDA");
+
+    const [depositeTickerPDA] = PublicKey.findProgramAddressSync([Buffer.from('DEPOSITE_TICKER_SEED')], PROGRAM_ID);
     const txHash = await program?.methods.buyTicket(count)
       .accounts({
         buyer: wallet.publicKey,
@@ -146,6 +148,7 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
         buyerTokenAccount: userAssociatedTokenAddress,
         user: userAccountPDA,
         lottery: lotteryPDA,
+        depositeTicker: depositeTickerPDA,
         systemProgram: SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID
       })
