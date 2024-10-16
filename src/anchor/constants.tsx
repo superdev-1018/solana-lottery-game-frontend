@@ -1,7 +1,7 @@
 import { Keypair, PublicKey } from "@solana/web3.js";
 import bs58 from 'bs58';
 export const RPC_ENDPOINT = "https://api.devnet.solana.com";
-export const PROGRAM_ID = new PublicKey("GnUspD1yjkreCUDsBu6n3ow9ARZ3QMBgGcBrNeQmHx9z");
+export const PROGRAM_ID = new PublicKey("8JgYsnrp8ASKABP7hnma1j8DTaU4F31hwJoPXB96SZwL");
 export const ADMIN_KEY = new PublicKey("85Rm7Up3AfqiSZVrugBaPxwuTaijUFxPCzpd8JScGibr");
 export const ADMIN_KEYPAIR = Keypair.fromSecretKey(bs58.decode("4ugXSRFqMvHRnapAirCPkSGrNbqokLNAzLe9ARNhNSMV8Cei9UxL5StRB3sDrPPmxdurqVkWvMERrz2XxApFB5GC"));
 export const USDT_MINT_ADDRESS = new PublicKey("HYrpV9vBvTzYRMoGfBkzjsxNQcJjWLqNUKwf5C7oy8uf");

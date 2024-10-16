@@ -17,6 +17,7 @@ import { useGlobalState } from '@/hooks/useGlobalState'
 import { InfoModal } from './info_modal'
 import {TicketModal} from './ticket_modal'
 import {TimeFrame} from '../../anchor/constants';
+import { formatTime } from '@/utils/util'
 
 
 const card_style = {
@@ -27,29 +28,6 @@ const card_style = {
   transition: 'transform 0.3s ease',
   cursor: 'pointer',
 }
-
-const formatTime = (hours: number): string => {
-  if (hours ==1 ) {
-    return `HOURLY`;
-  } else if (hours != 1 && hours < 24) {
-    return `${hours}-HOURLY`;
-  } else if (hours == 24) {
-    return `DAILY`;
-  } else if (hours == 168) {
-    return `WEEKLY`;
-  } else if (hours == 720) {
-    return `MONTHLY`;
-  } else if (hours == 2160) {
-    return `QUARTERLY`;
-  } else if (hours == 4320) {
-    return `HALF-YEARLY`;
-  } else if (hours == 8640) {
-    return `ANNUALLY`;
-  }else {
-    const years = Math.floor(hours / 8760);
-    return `${years} ${years === 1 ? 'year' : 'years'}`;
-  }
-};
 
 
 export default function GameCard({ lottery, source }: any) {

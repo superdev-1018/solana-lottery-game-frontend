@@ -49,6 +49,8 @@ interface GlobalContextType {
   joinToLottery: (lotteryPDAStr: string, userSpotIndex: number) => Promise<void>;
   getUserData: () => Promise<any | null>; 
   getLotteryData: (lotteryPDAStr: string) => Promise<any | null>;
+  getWinnerTicker: () => Promise<any | null>;
+  getDepositeTicker: () => Promise<any | null>;
 }
 
 export const GlobalContext = createContext<GlobalContextType>({
@@ -56,6 +58,8 @@ export const GlobalContext = createContext<GlobalContextType>({
   joinToLottery: async (lotteryPDAStr: string, userSpotIndex: number) => {},
   getUserData: async () => null,
   getLotteryData: async (lotteryPDAStr: string) => null,
+  getWinnerTicker: async () => null,
+  getDepositeTicker: async () => null,
 });
 
 interface GlobalStateProps {
@@ -201,8 +205,21 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
     return lotteryData;
   }
 
+  const getWinnerTicker = async () => {
+    let [winnerTickerPDA] = PublicKey.findProgramAddressSync([Buffer.from("WINNER_TICKER_SEED")], PROGRAM_ID);
+    let winnerTickerData = await program?.account.winnerTicker.fetch(winnerTickerPDA);
+    console.log(winnerTickerData,"*****")
+    return winnerTickerData;
+  }
+
+  const getDepositeTicker = async () => {
+    let [depositeTickerPDA] = PublicKey.findProgramAddressSync([Buffer.from("DEPOSITE_TICKER_SEED")], PROGRAM_ID);
+    let depositeTickerData = await program?.account.depositeTicker.fetch(depositeTickerPDA);
+    return depositeTickerData;
+  }
+
   return (
-    <GlobalContext.Provider value={{ buyTicket, getUserData, getLotteryData, joinToLottery}}>
+    <GlobalContext.Provider value={{ buyTicket, getUserData, getLotteryData, joinToLottery, getWinnerTicker, getDepositeTicker}}>
       {children}
     </GlobalContext.Provider>
   )
