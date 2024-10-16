@@ -42,26 +42,29 @@ import {
   transfer,
 } from '@solana/spl-token'
 import { token } from '@coral-xyz/anchor/dist/cjs/utils'
+import {toast} from 'react-toastify';
 
 // Define a proper context type
 interface GlobalContextType {
-  buyTicket: (lotteryPubkeyStr: string, count: number) => Promise<void>;
+  buyTicket: (lotteryPubkeyStr: string, count: number, referralID: string) => Promise<void>;
   joinToLottery: (lotteryPDAStr: string, userSpotIndex: number) => Promise<void>;
   getUserData: () => Promise<any | null>; 
   getLotteryData: (lotteryPDAStr: string) => Promise<any | null>;
   getWinnerTicker: () => Promise<any | null>;
   getDepositeTicker: () => Promise<any | null>;
   getHistory: (timeFrame: number) => Promise<any | null>;
+  setUserReferral: (link:string) => Promise<any | null>;
 }
 
 export const GlobalContext = createContext<GlobalContextType>({
-  buyTicket: async (lotteryPubkeyStr: string, count: number) => {},
+  buyTicket: async (lotteryPubkeyStr: string, count: number, referralID: string) => {},
   joinToLottery: async (lotteryPDAStr: string, userSpotIndex: number) => {},
   getUserData: async () => null,
   getLotteryData: async (lotteryPDAStr: string) => null,
   getWinnerTicker: async () => null,
   getDepositeTicker: async () => null,
-  getHistory: async (timeFrame: number) => null
+  getHistory: async (timeFrame: number) => null,
+  setUserReferral: async (link:string) => null,
 });
 
 interface GlobalStateProps {
@@ -106,7 +109,7 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
   }, [connection, wallet])
 
 
-  const buyTicket = async (lotteryPubkeyStr: string, count: number) => {
+  const buyTicket = async (lotteryPubkeyStr: string, count: number, referralID: string) => {
     console.log('Buy Ticket Function')
     if (!wallet.publicKey) return
 
@@ -146,7 +149,17 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
     console.log(lotteryPDA,"Lottery PDA");
 
     const [depositeTickerPDA] = PublicKey.findProgramAddressSync([Buffer.from('DEPOSITE_TICKER_SEED')], PROGRAM_ID);
-    const txHash = await program?.methods.buyTicket(count)
+
+    let referrerPDA;
+    if (referralID && referralID != ""){
+      const userList = await program?.account.user.all();
+      const referrerData = userList?.find(user => user.account.referralLink === referralID);
+      referrerPDA = referrerData?.publicKey;
+    }
+
+    let txHash;
+    if (referralID == "" || !referralID){
+       txHash = await program?.methods.buyTicket(count)
       .accounts({
         buyer: wallet.publicKey,
         globalAccount: globalAccountPDA,
@@ -162,10 +175,30 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
       .catch((error) => {
         console.log(error,"buy ticket error");
       })
+    } else {
+      txHash = await program?.methods.buyTicketWithReferral(count)
+      .accounts({
+        buyer: wallet.publicKey,
+        globalAccount: globalAccountPDA,
+        poolTokenAccount: poolATA.address,
+        buyerTokenAccount: userAssociatedTokenAddress,
+        user: userAccountPDA,
+        referrer: referrerPDA,
+        lottery: lotteryPDA,
+        depositeTicker: depositeTickerPDA,
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID
+      })
+      .rpc()
+      .catch((error) => {
+        console.log(error,"buy ticket error");
+      })
+    }
+    
 
       let [userPDA, bump] = PublicKey.findProgramAddressSync([Buffer.from("USER_INFO_SEED"), wallet.publicKey.toBuffer()], PROGRAM_ID);
       let userdata = await program?.account.user.fetch(userPDA);
-      console.log(userdata,"*********************")
+      if (txHash){ toast.success("Ticket Buy Success!",{position:'top-center', autoClose:7000})}
       console.log(txHash,"buyticket txHash");
   }
 
@@ -173,7 +206,7 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
   const joinToLottery = async(lotteryPDAStr: string, userSpotIndex: number) => {
     if (!wallet.publicKey) return
     let [userPDA, bump] = PublicKey.findProgramAddressSync([Buffer.from("USER_INFO_SEED"), wallet.publicKey.toBuffer()], PROGRAM_ID);
-    console.log(lotteryPDAStr,"****************")
+
     let lotteryPDA = new web3.PublicKey(lotteryPDAStr);
 
     const txHash = await program?.methods.joinLottery(userSpotIndex)
@@ -184,10 +217,22 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
       })
       .rpc()
       .catch((error) => {
-        console.log(error, " in joinlottery");
+        const errorMessage = error.message || "";
+        if (errorMessage.includes('Already participated')) {
+          toast.error('You have already participated in this lottery!', {
+            position: "top-center",
+            autoClose: 5000,
+          });
+        } else {
+          toast.error('An error occurred, please try again.', {
+            position: "top-center",
+          });
+        }
+        console.error(error);
       });
-
-      console.log(txHash,"txHash");
+      if (txHash){
+        toast.success("Successfully Joined!", {position:'top-center', autoClose:7000});
+      }
   }
 
   const getUserData = async() => {
@@ -197,7 +242,7 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
     
     if (!accountInfo){ return null;}
     let userdata = await program?.account.user.fetch(userPDA);
-    console.log(userdata,"*****")
+
     return userdata;
   }
 
@@ -210,7 +255,6 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
   const getWinnerTicker = async () => {
     let [winnerTickerPDA] = PublicKey.findProgramAddressSync([Buffer.from("WINNER_TICKER_SEED")], PROGRAM_ID);
     let winnerTickerData = await program?.account.winnerTicker.fetch(winnerTickerPDA);
-    console.log(winnerTickerData,"*****")
     return winnerTickerData;
   }
 
@@ -253,6 +297,31 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
         return closedLottery;
   }
 
+  const setUserReferral = async (link: string) => {
+    let userData = await getUserData();
+    if (!userData){
+      toast.warning("You should buy ticket for setting referral link",{position:'top-center', autoClose:7000});
+    } else {
+      if (!wallet.publicKey) return;
+      let [userPDA, bump] = PublicKey.findProgramAddressSync([Buffer.from("USER_INFO_SEED"), wallet.publicKey.toBuffer()], PROGRAM_ID);
+      const txHash = await program?.methods.setReferral(link)
+      .accounts({
+        signer: wallet.publicKey,
+        user: userPDA
+      })
+      .rpc()
+      .catch((error) => {
+        console.log(error,"error in setreferral");
+      });
+
+      if (txHash){ 
+        toast.success("Success Setting!", {position:'top-center', autoClose:7000})
+      }
+    }
+    
+  }
+
+
   return (
     <GlobalContext.Provider 
       value={{ 
@@ -262,7 +331,8 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
         joinToLottery, 
         getWinnerTicker, 
         getDepositeTicker,
-        getHistory
+        getHistory,
+        setUserReferral
       }}>
       {children}
     </GlobalContext.Provider>

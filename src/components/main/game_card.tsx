@@ -14,6 +14,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined'
 import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { toast } from 'react-toastify';
 import { useGlobalState } from '@/hooks/useGlobalState'
 import { InfoModal } from './info_modal'
 import {TicketModal} from './ticket_modal'
@@ -46,6 +47,8 @@ export default function GameCard({ lottery, source }: any) {
   const { buyTicket, getUserData, getLotteryData, joinToLottery} = useGlobalState()
 
   const joinLottery = async () => {
+    
+    if (!wallet.connected){ toast.info("Connect Your Wallet!", {position: 'top-center', autoClose:7000}); return;}
     let userData = await getUserData();
     let lotteryData = await getLotteryData(lottery.publicKey.toString());
     let userSpotIndex = await TimeFrame.findIndex(timeframe => timeframe == Number(lotteryData.timeFrame));

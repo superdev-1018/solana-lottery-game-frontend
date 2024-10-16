@@ -18,6 +18,8 @@ import { colorModeState } from '@/store/colorMode'
 import SolanaWalletProvider from '@/components/provider/SolanaWalletProvider'
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { SocketProvider } from './context/SocketContext'
 
 
@@ -32,7 +34,6 @@ function InnerApp() {
 
 
   return (
-    <SocketProvider>
       <LocalizationProvider
         dateAdapter={AdapterDateFns}
         locale={isEnglish ? dateEn : dateJa}
@@ -46,6 +47,7 @@ function InnerApp() {
             }}
           >
             <SolanaWalletProvider>
+            <ToastContainer />
               <BrowserRouter>
                 <Routes>
                   <Route
@@ -62,7 +64,6 @@ function InnerApp() {
           </SnackbarProvider>
         </ThemeProvider>
       </LocalizationProvider>
-    </SocketProvider>
   )
 }
 

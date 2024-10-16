@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { useGlobalState } from '@/hooks/useGlobalState'
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 type TicketModalProps = {
   openModal: boolean
@@ -54,12 +55,25 @@ export function TicketModal({ openModal, handleClose , lotteryPubkey}: TicketMod
   const theme = useTheme()
   const xsDisplay = useMediaQuery(theme.breakpoints.down('sm'))
   const [ticketNumber, setTicketNumber] = useState<number>(1);
+  const location = useLocation();
+
+  const getQueryParam = (param: string) => {
+    const params = new URLSearchParams(location.search);
+    return params.get(param);
+  };
 
   const handleRemove = () => {
     if (ticketNumber > 1) {
         setTicketNumber((prev:number) => prev - 1); 
     }
 };
+
+const buy = () =>{
+
+  let referralID = getQueryParam('ref');
+  if (!referralID) {referralID = "";}
+  buyTicket(lotteryPubkey, ticketNumber, referralID)
+}
 
 const handleAdd = () => {
     setTicketNumber((prev:number) => prev + 1);
@@ -198,7 +212,7 @@ const handleAdd = () => {
 
               <Button
                 variant="outlined"
-                onClick={()=> buyTicket(lotteryPubkey, ticketNumber)}
+                onClick={buy}
                 sx={{
                   borderRadius: '5px',
                   fontSize: { xs: '14px', sm: '16px' },

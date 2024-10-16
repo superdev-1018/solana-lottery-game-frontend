@@ -1,11 +1,14 @@
-import { Box, Button, List, ListItem, ListItemText, Modal, Typography } from "@mui/material"
-
+import { Box, Button, useMediaQuery, Modal, TextField, Typography } from "@mui/material"
+import { useTheme } from '@mui/material/styles'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { useGlobalState } from "@/hooks/useGlobalState"
+import { useWallet } from "@solana/wallet-adapter-react"
 
 type ReferralModalProps = {
     openModal: boolean,
-    handleClose: () => void
+    handleClose: () => void,
+    referralLink: string | null
 }
 
 const modalStyle = {
@@ -20,9 +23,9 @@ const modalStyle = {
     borderRadius: '20px',
     maxWidth: {
       xs: '90%',
-      sm: '80%',
+      sm: '60%',
       md: '60%',
-      lg: '50%',
+      lg: '40%',
     },
     width: '100%',
     maxHeight: '80vh',
@@ -38,7 +41,25 @@ const modalStyle = {
   }
 
 
-export function ReferralModal({openModal, handleClose}:ReferralModalProps){
+export function ReferralModal({openModal, handleClose, referralLink}:ReferralModalProps){
+    const [referral, setReferral] = useState<any | null>(null);
+    const theme = useTheme()
+    const xsDisplay = useMediaQuery(theme.breakpoints.down('sm'))
+
+    const {setUserReferral} = useGlobalState();
+
+    const handleChange = (e:any) => {
+      setReferral(e);
+    }
+
+    const setFunc = () => {
+      setUserReferral(referral);
+    }
+
+    useEffect(()=>{
+      setReferral(referralLink)
+    },[]);
+
     return (
         <>
          <Modal
@@ -81,34 +102,42 @@ export function ReferralModal({openModal, handleClose}:ReferralModalProps){
             paddingY={2}
             sx={{ backgroundColor: '#1c1b20' }}
           >
-            Hourly Winners
+            Set Referral Link
           </Typography>
 
           <Box
-            sx={{
-              
+            sx={{        
               paddingY: 2,
-              overflowY: 'auto', 
-                overflowX: 'hidden', 
-                '&::-webkit-scrollbar': {
-                  width: '12px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  background: '#f1f1f1',
-                  borderRadius: '10px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: '#888',
-                  borderRadius: '10px',
-                  '&:hover': {
-                    background: '#555',
-                  },
-                },
-                scrollbarWidth: 'thin',
-                scrollbarColor: '#888 #f1f1f1',
+              display:'flex',
+              flexDirection: xsDisplay? 'column':'row'
             }}
           >
-            
+            <TextField 
+              label="Referral ID" 
+              variant="outlined" 
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '5px',
+                  backgroundColor:'white',
+                },
+                width: xsDisplay?'100%':'70%'
+              }}
+              value= {referral}
+              onChange={(e)=>handleChange(e.target.value)}
+            />
+            <Button 
+              variant="contained" 
+              sx={{
+                width:xsDisplay?'100%':'25%', 
+                marginX:xsDisplay?'0':'10px', 
+                marginY:xsDisplay?'10px':'0', 
+                borderRadius:'5px',
+                boxShadow:'none'
+              }}
+              onClick={setFunc}
+            >
+                Set
+              </Button>
           </Box>
         </Box>
       </Modal>

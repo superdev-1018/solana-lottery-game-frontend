@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
   Box,
   Container,
@@ -8,37 +9,39 @@ import {
   useMediaQuery,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { useNavigate } from 'react-router'
-
-import LanguageChanger from '@/components/theme/LanguageChanger'
-import ColorModeChanger from '@/components/theme/ColorModeChanger'
-
 import logoHorizontal from '@/assets/img/logo/logo1.png'
-import logoHorizontalWhite from '@/assets/img/logo/Epics-logo-horizontal-white.svg'
-
-import logo from '@/assets/img/logo/Epics-logo.svg'
-import logoWhite from '@/assets/img/logo/Epics-logo-white.svg'
-
 import { useRecoilValue } from 'recoil'
 import { colorModeState } from '@/store/colorMode'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import TelegramIcon from '@mui/icons-material/Telegram'
 import  * as style from '@/assets'
 import '@/assets/style/CustomWalletAdapter.css'
 import { useWallet } from '@solana/wallet-adapter-react'
 import {ReferralModal} from '../../components/main/referral_modal'
-import { useState } from 'react'
+import { useGlobalState } from '@/hooks/useGlobalState'
+
 
 export default function DefaultHeader() {
   const [openModal, setOpenModal] = useState(false)
+  const [referral, setReferralLink] = useState(null)
   const handleClose = () => setOpenModal(false)
   const colorMode = useRecoilValue(colorModeState)
   const navigate = useNavigate()
   const theme = useTheme()
   const smDisplay = useMediaQuery(theme.breakpoints.down('md'))
   const { connected, publicKey } = useWallet()
+  const {getUserData} = useGlobalState();
+
+  useEffect(() => {
+    const setUserLink = async() => {
+      if(!connected) return;
+      const userData = await getUserData();
+      const userReferralLink = userData?.referralLink;
+      setReferralLink(userReferralLink);
+    }
+    setUserLink()
+  }, [connected])
+ 
 
   return (
     <>
@@ -69,11 +72,13 @@ export default function DefaultHeader() {
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',  
                         textOverflow: 'ellipsis',
-                        color:'white'
+                        color:'white',
+                        textAlign:'center',
+                        textDecoration:'none'
                     }}
                     onClick={() => setOpenModal(true)}
                 >
-                    Referral Link: https://poolparty/kjhiucis
+                    {referral? `Referral Link: https://poolparty/?ref=${referral}` : "Set Referral ID"}
                 </Link>
             </Stack>
         ) : null}
@@ -82,7 +87,7 @@ export default function DefaultHeader() {
         </Grid>
       </Container>
 
-      <ReferralModal openModal={openModal} handleClose={handleClose}/>
+      <ReferralModal openModal={openModal} handleClose={handleClose} referralLink = {referral}/>
     </>
   )
 }

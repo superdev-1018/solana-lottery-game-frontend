@@ -32,5 +32,5 @@ export const header = {
 
 
 export const footer = {
-    container: {backgroundColor: 'black', paddingY:'20px', borderTop:'1px solid white'}
+    container: {backgroundColor: 'black', paddingY:'20px'}
 }

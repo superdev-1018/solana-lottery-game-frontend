@@ -49,6 +49,7 @@
     "react-i18next": "11.17.2",
     "react-lazy-load-image-component": "1.5.4",
     "react-router-dom": "6.3.0",
+    "react-toastify": "^10.0.6",
     "recoil": "0.7.3",
     "socket.io-client": "^4.8.0",
     "zod": "3.17.3"

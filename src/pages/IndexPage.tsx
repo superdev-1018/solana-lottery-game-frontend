@@ -8,6 +8,7 @@ import {
   Typography,
   useMediaQuery,
   Link,
+  Button,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import DataLoading from '@/components/loading/DataLoading'
@@ -62,7 +63,7 @@ export default function IndexPage() {
 
       if (!lotteryData) return
       const openedLottery = lotteryData
-        .filter((lottery) => lottery.account.state === 0)
+        .filter((lottery) => lottery.account.state == 0)
         .map((lottery) => ({
           account: {
             id: lottery.account.id,
@@ -155,7 +156,7 @@ export default function IndexPage() {
             }}
           >
             Winners ticker:{' '}
-            <Link href="#">{winnerTicker?.winner.toString()}</Link> won the
+            <Link href="#">{winnerTicker?.winner.toString()}</Link> won the {' '}
             {formatTime(Number(winnerTicker?.timeFrame))} pool at{' '}
             <Link href="#">
               {Number(winnerTicker?.prize / 1_000_000_000_000)} USDT

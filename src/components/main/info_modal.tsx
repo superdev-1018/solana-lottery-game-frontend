@@ -49,7 +49,6 @@ export function InfoModal({openModal, handleClose, lottery}:InfoModalProps){
   useEffect(()=>{
     const setHistory = async () => {
       let historyData = await getHistory(Number(lottery?.account.timeFrame));
-      console.log(historyData,"************");
       setWinHistory(historyData);
     }
     setHistory();
