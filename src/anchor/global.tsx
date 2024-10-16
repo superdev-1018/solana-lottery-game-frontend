@@ -51,6 +51,7 @@ interface GlobalContextType {
   getLotteryData: (lotteryPDAStr: string) => Promise<any | null>;
   getWinnerTicker: () => Promise<any | null>;
   getDepositeTicker: () => Promise<any | null>;
+  getHistory: (timeFrame: number) => Promise<any | null>;
 }
 
 export const GlobalContext = createContext<GlobalContextType>({
@@ -60,6 +61,7 @@ export const GlobalContext = createContext<GlobalContextType>({
   getLotteryData: async (lotteryPDAStr: string) => null,
   getWinnerTicker: async () => null,
   getDepositeTicker: async () => null,
+  getHistory: async (timeFrame: number) => null
 });
 
 interface GlobalStateProps {
@@ -218,8 +220,50 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
     return depositeTickerData;
   }
 
+  const getHistory = async (timeFrame: number) => {
+
+    const lotteryData = await program?.account.lottery.all()
+      if (!lotteryData) return
+      const closedLottery = await lotteryData
+        .filter((lottery) => lottery.account.state == 1 && Number(lottery.account.timeFrame) == timeFrame)
+        .map((lottery) => ({
+          account: {
+            id: lottery.account.id,
+            timeFrame: lottery.account.timeFrame,
+            ticketPrice: lottery.account.ticketPrice,
+            maxTicket: lottery.account.maxTicket,
+            devFee: lottery.account.devFee,
+            startTime: lottery.account.startTime,
+            endTime: lottery.account.endTime,
+            state: lottery.account.state,
+            participants: lottery.account.participants.map((pubkey) =>
+              pubkey.toString()
+            ),
+            winner: lottery.account.winner,
+            prizePercent: lottery.account.prizePercent,
+            winnerPrize: lottery.account.winnerPrize,
+            realPoolAmount: lottery.account.realPoolAmount,
+            realCount: lottery.account.realCount,
+            round: lottery.account.round,
+          },
+          publicKey: lottery.publicKey,
+        }))
+        .sort((a, b) => Number(a.account.id) - Number(b.account.id));
+
+        return closedLottery;
+  }
+
   return (
-    <GlobalContext.Provider value={{ buyTicket, getUserData, getLotteryData, joinToLottery, getWinnerTicker, getDepositeTicker}}>
+    <GlobalContext.Provider 
+      value={{ 
+        buyTicket, 
+        getUserData, 
+        getLotteryData, 
+        joinToLottery, 
+        getWinnerTicker, 
+        getDepositeTicker,
+        getHistory
+      }}>
       {children}
     </GlobalContext.Provider>
   )

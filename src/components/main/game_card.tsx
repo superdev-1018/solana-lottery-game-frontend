@@ -198,7 +198,7 @@ export default function GameCard({ lottery, source }: any) {
         </Card>
       ) : null}
 
-      <InfoModal openModal={openModal} handleClose={handleClose} />
+      <InfoModal openModal={openModal} handleClose={handleClose} lottery = {lotteryData}/>
       <TicketModal openModal={openTicketModal} handleClose={handleTicketClose} lotteryPubkey ={selectedLottery}/>
     </>
   )

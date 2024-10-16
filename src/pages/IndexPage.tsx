@@ -102,7 +102,7 @@ export default function IndexPage() {
 
     const interval = setInterval(() => {
       winnerTickerFn()
-    }, 3000000)
+    }, 60000)
 
     return () => {
       clearInterval(interval)
