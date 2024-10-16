@@ -8,6 +8,7 @@ import {
   Stack,
 } from '@mui/material'
 import Countdown from 'react-countdown'
+import axios from 'axios';
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined'
@@ -17,7 +18,7 @@ import { useGlobalState } from '@/hooks/useGlobalState'
 import { InfoModal } from './info_modal'
 import {TicketModal} from './ticket_modal'
 import {TimeFrame} from '../../anchor/constants';
-import { formatTime } from '@/utils/util'
+import { formatTime, getServerTime } from '@/utils/util'
 
 
 const card_style = {
@@ -38,6 +39,7 @@ export default function GameCard({ lottery, source }: any) {
   const [hovered, setHovered] = useState(false)
   const [lotteryData, setLotteryData] = useState<any>()
   const [selectedLottery, setSelectLottery] = useState('')
+  const [restTime, setRestTime] = useState<number>(5000);
 
   const wallet = useWallet()
 
@@ -46,8 +48,6 @@ export default function GameCard({ lottery, source }: any) {
   const joinLottery = async () => {
     let userData = await getUserData();
     let lotteryData = await getLotteryData(lottery.publicKey.toString());
-    console.log(userData,"in joinlottery")
-    console.log(lotteryData);
     let userSpotIndex = await TimeFrame.findIndex(timeframe => timeframe == Number(lotteryData.timeFrame));
     
     let userLotterySpot = userData?.spot[userSpotIndex];
@@ -65,8 +65,13 @@ export default function GameCard({ lottery, source }: any) {
   useEffect(() => {}, [openModal])
 
   useEffect(() => {
-    console.log(lottery)
-    setLotteryData(lottery)
+    setLotteryData(lottery);
+    let timeFrame = Number(lottery.account.timeFrame);
+    const setRestfulTime =async() =>{
+      let restTime = await getServerTime(timeFrame);
+      setRestTime(restTime);
+    };
+    setRestfulTime();
   }, [lottery])
 
   return (
@@ -125,7 +130,7 @@ export default function GameCard({ lottery, source }: any) {
                 marginTop={'7px'}
               >
                 <AccessAlarmOutlinedIcon sx={{ mr: '6px' }} />
-                <Countdown date={Date.now() + (Number(lottery.account.timeFrame)) * 3600000} />
+                <Countdown date={Date.now() + restTime} />
               </Box>
               <Box display={'flex'} justifyContent={'center'} marginTop={'7px'}>
                 <ConfirmationNumberOutlinedIcon />

@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const formatTime = (hours: number): string => {
     if (hours ==1 ) {
       return `HOURLY`;
@@ -20,3 +22,13 @@ export const formatTime = (hours: number): string => {
       return `${years} ${years === 1 ? 'year' : 'years'}`;
     }
   };
+
+  export const getServerTime = async (timeFrame:number) => {
+      try {
+        const res = await axios.post(`http://localhost:5005/get_current_time`, { timeFrame });
+        return res.data.rest_time;
+      } catch (error) {
+        console.log(error);
+        return 5000;
+      }
+  }
