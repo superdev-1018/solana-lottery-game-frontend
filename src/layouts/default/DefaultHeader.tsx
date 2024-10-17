@@ -55,7 +55,7 @@ export default function DefaultHeader() {
     });
   };
  
-  const referralLink = referral ? `https://poolparty/?ref=${referral}` : "";
+  const referralLink = referral ? `http://localhost:4200/?ref=${referral}` : "";
   return (
     <>
       <Container maxWidth={false} sx={style.header.container}>
@@ -100,7 +100,7 @@ export default function DefaultHeader() {
                         sx={{paddingX:'3px'}}
                       >
                         <Typography sx={{width:'90%', overflow: 'hidden', textOverflow: 'ellipsis',}}>
-                          link: https://poolparty/?ref=${referral}
+                          link: http://localhost:4200/?ref=${referral}
                         </Typography>
                         <IconButton
                           sx={{

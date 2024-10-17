@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 type InfoModalProps = {
     openModal: boolean,
     handleClose: () => void,
-    lottery: any
+    history: any
 }
 
 const modalStyle = {
@@ -40,19 +40,17 @@ const modalStyle = {
   }
 
 
-export function InfoModal({openModal, handleClose, lottery}:InfoModalProps){
+export function InfoModal({openModal, handleClose, history}:InfoModalProps){
 
   const [winHistory, setWinHistory] = useState<any | null>(null);
 
   const {getHistory} = useGlobalState();
 
   useEffect(()=>{
-    const setHistory = async () => {
-      let historyData = await getHistory(Number(lottery?.account.timeFrame));
-      setWinHistory(historyData);
+    if(history){
+      setWinHistory(history);
     }
-    setHistory();
-  }, [lottery])
+  }, [history])
 
     return (
         <>

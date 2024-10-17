@@ -41,10 +41,11 @@ export default function GameCard({ lottery, source }: any) {
   const [lotteryData, setLotteryData] = useState<any>()
   const [selectedLottery, setSelectLottery] = useState('')
   const [restTime, setRestTime] = useState<number>(5000);
+  const [winHistory, setWinHistory] = useState<any | null>(null)
 
   const wallet = useWallet()
 
-  const { buyTicket, getUserData, getLotteryData, joinToLottery} = useGlobalState()
+  const { buyTicket, getUserData, getLotteryData, joinToLottery, getHistory} = useGlobalState()
 
   const joinLottery = async () => {
     
@@ -65,7 +66,12 @@ export default function GameCard({ lottery, source }: any) {
     }
   }
 
-  useEffect(() => {}, [openModal])
+  const getLotteryHistory = async () =>{
+      let lottery = lotteryData;
+      let historyData = await getHistory(Number(lottery?.account.timeFrame))
+      setWinHistory(historyData);
+      setOpenModal(true)
+  }
 
   useEffect(() => {
     setLotteryData(lottery);
@@ -106,7 +112,7 @@ export default function GameCard({ lottery, source }: any) {
                   top: '-60px',
                   transform: hovered ? 'scale(1.2)' : 'scale(1)',
                 }}
-                onClick={() => setOpenModal(true)}
+                onClick={getLotteryHistory}
               />
               <LazyLoadImage
                 alt="card-bg"
@@ -201,7 +207,7 @@ export default function GameCard({ lottery, source }: any) {
         </Card>
       ) : null}
 
-      <InfoModal openModal={openModal} handleClose={handleClose} lottery = {lotteryData}/>
+      <InfoModal openModal={openModal} handleClose={handleClose} history = {winHistory}/>
       <TicketModal openModal={openTicketModal} handleClose={handleTicketClose} lotteryPubkey ={selectedLottery}/>
     </>
   )
