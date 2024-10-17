@@ -3,11 +3,13 @@ import { Box, Button, List, ListItem, ListItemText, Modal, Typography } from "@m
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { useGlobalState } from "@/hooks/useGlobalState"
 import { useEffect, useState } from "react"
+import { formatTime } from "@/utils/util"
 
 type InfoModalProps = {
     openModal: boolean,
     handleClose: () => void,
-    history: any
+    history: any,
+    timeframe: number
 }
 
 const modalStyle = {
@@ -40,7 +42,7 @@ const modalStyle = {
   }
 
 
-export function InfoModal({openModal, handleClose, history}:InfoModalProps){
+export function InfoModal({openModal, handleClose, history, timeframe}:InfoModalProps){
 
   const [winHistory, setWinHistory] = useState<any | null>(null);
 
@@ -94,7 +96,7 @@ export function InfoModal({openModal, handleClose, history}:InfoModalProps){
             paddingY={2}
             sx={{ backgroundColor: '#1c1b20' }}
           >
-            Hourly Winners
+            {formatTime(timeframe)} Winners
           </Typography>
 
           <Box
@@ -129,6 +131,7 @@ export function InfoModal({openModal, handleClose, history}:InfoModalProps){
                 borderBottom: '2px dotted white',
                   width: '100%',
                 }}
+                key = {index}
               >
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
                   <ListItemText primary="Period: 24th August, 2024 16:00 GMT" />
@@ -137,19 +140,19 @@ export function InfoModal({openModal, handleClose, history}:InfoModalProps){
                   <ListItemText primary={`Number of participants: ${lottery.account.realCount} spots`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`Prize pool: ${lottery.account.realPoolAmount/10000000000} USDT`} />
+                  <ListItemText primary={`Prize pool: ${(lottery.account.realPoolAmount/10000000000).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
                   <ListItemText primary={`Winning tax: ${lottery.account.devFee}%`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[0]} = ${(lottery.account.winnerPrize[0]/10000000000).toFixed(2)} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[0]} = ${(lottery.account.winnerPrize[0]/10000000000).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[1]} = ${(lottery.account.winnerPrize[1]/10000000000).toFixed(2)} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[1]} = ${(lottery.account.winnerPrize[1]/10000000000).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[2]} = ${(lottery.account.winnerPrize[2]/10000000000).toFixed(2)} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[2]} = ${(lottery.account.winnerPrize[2]/10000000000).toFixed(3)} USDT`} />
                 </ListItem>
               </List>
               )): null

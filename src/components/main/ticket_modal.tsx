@@ -70,7 +70,7 @@ export function TicketModal({ openModal, handleClose , lotteryPubkey}: TicketMod
 };
 
 const buy = () =>{
-
+  handleClose()
   let referralID = getQueryParam('ref');
   if (!referralID) {referralID = "";}
   buyTicket(lotteryPubkey, ticketNumber, referralID)

@@ -33,15 +33,16 @@ const card_style = {
 
 
 export default function GameCard({ lottery, source }: any) {
-  const [openModal, setOpenModal] = useState(false)
-  const [openTicketModal, setOpenTicketModal] = useState(false)
-  const handleClose = () => setOpenModal(false)
-  const handleTicketClose = () => setOpenTicketModal(false)
-  const [hovered, setHovered] = useState(false)
-  const [lotteryData, setLotteryData] = useState<any>()
-  const [selectedLottery, setSelectLottery] = useState('')
+  const [openModal, setOpenModal] = useState(false);
+  const [openTicketModal, setOpenTicketModal] = useState(false);
+  const handleClose = () => setOpenModal(false);
+  const handleTicketClose = () => setOpenTicketModal(false);
+  const [hovered, setHovered] = useState(false);
+  const [lotteryData, setLotteryData] = useState<any>();
+  const [selectedLottery, setSelectLottery] = useState('');
   const [restTime, setRestTime] = useState<number>(5000);
-  const [winHistory, setWinHistory] = useState<any | null>(null)
+  const [winHistory, setWinHistory] = useState<any | null>(null);
+  const [timeFrame, setTimeFrame] = useState<number>(1);
 
   const wallet = useWallet()
 
@@ -69,6 +70,7 @@ export default function GameCard({ lottery, source }: any) {
   const getLotteryHistory = async () =>{
       let lottery = lotteryData;
       let historyData = await getHistory(Number(lottery?.account.timeFrame))
+      setTimeFrame(Number(lottery?.account.timeFrame))
       setWinHistory(historyData);
       setOpenModal(true)
   }
@@ -207,7 +209,7 @@ export default function GameCard({ lottery, source }: any) {
         </Card>
       ) : null}
 
-      <InfoModal openModal={openModal} handleClose={handleClose} history = {winHistory}/>
+      <InfoModal openModal={openModal} handleClose={handleClose} history = {winHistory} timeframe = {timeFrame}/>
       <TicketModal openModal={openTicketModal} handleClose={handleTicketClose} lotteryPubkey ={selectedLottery}/>
     </>
   )
