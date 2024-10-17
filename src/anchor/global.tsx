@@ -46,6 +46,7 @@ import {toast} from 'react-toastify';
 
 // Define a proper context type
 interface GlobalContextType {
+  getOpenedLottery: () => Promise<any | null>;
   buyTicket: (lotteryPubkeyStr: string, count: number, referralID: string) => Promise<void>;
   joinToLottery: (lotteryPDAStr: string, userSpotIndex: number) => Promise<void>;
   getUserData: () => Promise<any | null>; 
@@ -57,6 +58,7 @@ interface GlobalContextType {
 }
 
 export const GlobalContext = createContext<GlobalContextType>({
+  getOpenedLottery: async () => null,
   buyTicket: async (lotteryPubkeyStr: string, count: number, referralID: string) => {},
   joinToLottery: async (lotteryPDAStr: string, userSpotIndex: number) => {},
   getUserData: async () => null,
@@ -71,7 +73,7 @@ interface GlobalStateProps {
   children: ReactNode
 }
 
-export const GlobalState = ({ children }: GlobalStateProps) => {
+export const GlobalStateContext = ({ children }: GlobalStateProps) => {
   const [program, setProgram] = useState<Program<Lottery> | null>(null)
   const [isInitialized, setIsInitialized] = useState<boolean | null>(null)
   const [globalAccount, setGlobalAccount] = useState<any | null>(null)
@@ -108,6 +110,42 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
     }
   }, [connection, wallet])
 
+
+
+  const getOpenedLottery = async () => {
+    const lotteryData = await program?.account.lottery.all();
+  
+    if (!lotteryData) return;
+  
+    const openedLottery = lotteryData
+      .filter((lottery) => lottery.account.state == 0)
+      .map((lottery) => ({
+        account: {
+          id: lottery.account.id,
+          timeFrame: lottery.account.timeFrame,
+          ticketPrice: lottery.account.ticketPrice,
+          maxTicket: lottery.account.maxTicket,
+          devFee: lottery.account.devFee,
+          startTime: lottery.account.startTime,
+          endTime: lottery.account.endTime,
+          state: lottery.account.state,
+          participants: lottery.account.participants.map((pubkey) =>
+            pubkey.toString()
+          ),
+          winner: lottery.account.winner,
+          prizePercent: lottery.account.prizePercent,
+          winnerPrize: lottery.account.winnerPrize,
+          realPoolAmount: lottery.account.realPoolAmount,
+          realCount: lottery.account.realCount,
+          round: lottery.account.round,
+        },
+        publicKey: lottery.publicKey,
+      }))
+      .sort((a, b) => Number(a.account.timeFrame) - Number(b.account.timeFrame));
+  
+    return openedLottery;
+  };
+  
 
   const buyTicket = async (lotteryPubkeyStr: string, count: number, referralID: string) => {
     console.log('Buy Ticket Function')
@@ -325,6 +363,7 @@ export const GlobalState = ({ children }: GlobalStateProps) => {
   return (
     <GlobalContext.Provider 
       value={{ 
+        getOpenedLottery,
         buyTicket, 
         getUserData, 
         getLotteryData, 

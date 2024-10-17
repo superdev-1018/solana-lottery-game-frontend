@@ -34,9 +34,10 @@ const modalStyle = {
   borderRadius: '20px',
   maxWidth: {
     xs: '90%',
-    sm: '80%',
+    sm: '70%',
     md: '60%',
     lg: '40%',
+    xl:'30%'
   },
   width: '100%',
   maxHeight: '80vh',
@@ -188,7 +189,7 @@ const handleAdd = () => {
                 InputProps={{
                     sx: {
                         paddingY: '0',
-                        paddingX:'5px',
+                        paddingX:'20px',
                         height: '100%',
                         '& input': {
                             padding: '0',
@@ -210,7 +211,7 @@ const handleAdd = () => {
                 <AddIcon />
             </Button>
 
-              <Button
+              {!xsDisplay && <Button
                 variant="outlined"
                 onClick={buy}
                 sx={{
@@ -218,12 +219,26 @@ const handleAdd = () => {
                   fontSize: { xs: '14px', sm: '16px' },
                   marginLeft: '6px',
                   height: { xs: '50px', sm: '60px' },
-                  width: xsDisplay?'100%':'25%'
                 }}
               >
                 <ShoppingCartIcon />
                 Buy Ticket
-              </Button>
+              </Button>}
+
+              {xsDisplay && <Button
+                variant="outlined"
+                onClick={buy}
+                sx={{
+                  borderRadius: '5px',
+                  fontSize: { xs: '14px', sm: '16px' },
+                  marginLeft: '6px',
+                  height: { xs: '50px', sm: '60px' },
+                  width:'100%'
+                }}
+              >
+                <ShoppingCartIcon />
+                Buy Ticket
+              </Button>}
             </Box>
           </Stack>
         </Box>

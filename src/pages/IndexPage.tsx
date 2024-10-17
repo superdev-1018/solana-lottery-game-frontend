@@ -8,12 +8,9 @@ import {
   Typography,
   useMediaQuery,
   Link,
-  Button,
+
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import DataLoading from '@/components/loading/DataLoading'
-import BlockLoading from '@/components/loading/BlockLoading'
-
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -46,7 +43,7 @@ export default function IndexPage() {
   const xsDisplay = useMediaQuery(theme.breakpoints.down('sm'))
   const { enqueueSnackbar } = useSnackbar()
   const { connection } = useConnection()
-  const { getDepositeTicker, getWinnerTicker } = useGlobalState()
+  const { getDepositeTicker, getWinnerTicker, getOpenedLottery } = useGlobalState()
 
   useEffect(() => {
     if (!wallet) return
@@ -57,39 +54,24 @@ export default function IndexPage() {
     }
   }, [connection, wallet])
 
-  useEffect(() => {
-    const getLottery = async () => {
-      const lotteryData = await program?.account.lottery.all()
 
-      if (!lotteryData) return
-      const openedLottery = lotteryData
-        .filter((lottery) => lottery.account.state == 0)
-        .map((lottery) => ({
-          account: {
-            id: lottery.account.id,
-            timeFrame: lottery.account.timeFrame,
-            ticketPrice: lottery.account.ticketPrice,
-            maxTicket: lottery.account.maxTicket,
-            devFee: lottery.account.devFee,
-            startTime: lottery.account.startTime,
-            endTime: lottery.account.endTime,
-            state: lottery.account.state,
-            participants: lottery.account.participants.map((pubkey) =>
-              pubkey.toString()
-            ),
-            winner: lottery.account.winner,
-            prizePercent: lottery.account.prizePercent,
-            winnerPrize: lottery.account.winnerPrize,
-            realPoolAmount: lottery.account.realPoolAmount,
-            realCount: lottery.account.realCount,
-            round: lottery.account.round,
-          },
-          publicKey: lottery.publicKey,
-        }))
-      setLotteryList(openedLottery)
+  useEffect(() => {
+    const setLottery = async() => {
+      let lotterys = await getOpenedLottery();
+      setLotteryList(lotterys)
     }
-    getLottery()
-  }, [wallet])
+    setLottery()
+
+    const interval = setInterval(() => {
+      setLottery()
+    }, 3600000)
+
+    return () => {
+      clearInterval(interval)
+    }
+
+  }, [connection])
+
 
   useEffect(() => {
     const winnerTickerFn = async () => {
@@ -110,26 +92,26 @@ export default function IndexPage() {
     }
   }, [wallet, connection])
 
-  const fetchTransactions = useCallback(async () => {
-    setLoading(true)
-    try {
-      if (wallet.publicKey) {
-        const transactionsWS = await getTransactions(
-          connection,
-          wallet.publicKey
-        )
-        setTransactionsWS(transactionsWS)
-      }
-    } catch {
-      // enqueueSnackbar(`${t('sendTokenError')}`, { variant: 'error' })
-    } finally {
-      setLoading(false)
-    }
-  }, [wallet.publicKey])
+  // const fetchTransactions = useCallback(async () => {
+  //   setLoading(true)
+  //   try {
+  //     if (wallet.publicKey) {
+  //       const transactionsWS = await getTransactions(
+  //         connection,
+  //         wallet.publicKey
+  //       )
+  //       setTransactionsWS(transactionsWS)
+  //     }
+  //   } catch {
+  //     // enqueueSnackbar(`${t('sendTokenError')}`, { variant: 'error' })
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }, [wallet.publicKey])
 
-  useEffect(() => {
-    fetchTransactions()
-  }, [wallet.publicKey])
+  // useEffect(() => {
+  //   fetchTransactions()
+  // }, [wallet.publicKey])
 
   return (
     <>
@@ -156,10 +138,10 @@ export default function IndexPage() {
             }}
           >
             Winners ticker:{' '}
-            <Link href="#">{winnerTicker?.winner.toString()}</Link> won the {' '}
+            <Link href={`https://explorer.solana.com/address/${winnerTicker?.winner.toString()}`}>{winnerTicker?.winner.toString()}</Link> won the {' '}
             {formatTime(Number(winnerTicker?.timeFrame))} pool at{' '}
             <Link href="#">
-              {Number(winnerTicker?.prize / 1_000_000_000_000)} USDT
+              {Number(winnerTicker?.prize / 1_000_000_000_000).toFixed(2)} USDT
             </Link>
           </Typography>
         </Paper>
@@ -169,7 +151,7 @@ export default function IndexPage() {
           columns={{ xs: 12, sm: 8, md: 12, lg: 20 }}
           paddingTop={3}
         >
-          {lotteryList.length > 0
+          {lotteryList && lotteryList.length > 0
             ? lotteryList.map((lottery: LotteryData, index: number) => (
                 <Grid item xs={12} sm={4} md={4} lg={4} key={index}>
                   <GameCard
@@ -203,13 +185,18 @@ export default function IndexPage() {
             }}
           >
             Deposit ticker:{' '}
-            <Link href="#">{depositeTicker?.depositer.toString()}</Link> just
-            deposited{' '}
+            <Link 
+              href={`https://explorer.solana.com/address/${depositeTicker?.depositer.toString()}`} 
+              target='_blank'
+            >
+              {depositeTicker?.depositer.toString()}
+            </Link> 
+            just deposited{' '}
             <Link href="#">
-              {Number(depositeTicker?.amount)} USDT ({depositeTicker?.spots}{' '}
-              spots)
-            </Link>{' '}
-            at {formatTime(Number(depositeTicker?.timeFrame))} pool
+              {Number(depositeTicker?.amount)} USDT ({depositeTicker?.spots}
+              {' '} spots)
+            </Link>
+            {' '} at {formatTime(Number(depositeTicker?.timeFrame))} pool
           </Typography>
         </Paper>
       </Container>

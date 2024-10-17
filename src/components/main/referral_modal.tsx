@@ -54,6 +54,7 @@ export function ReferralModal({openModal, handleClose, referralLink}:ReferralMod
 
     const setFunc = () => {
       setUserReferral(referral);
+      handleClose();
     }
 
     useEffect(()=>{
@@ -63,11 +64,11 @@ export function ReferralModal({openModal, handleClose, referralLink}:ReferralMod
     return (
         <>
          <Modal
-        open={openModal}
-        onClose={handleClose}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
+          open={openModal}
+          onClose={handleClose}
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+        >
         <Box sx={{ ...modalStyle }}>
           <Box
             sx={{
@@ -132,7 +133,8 @@ export function ReferralModal({openModal, handleClose, referralLink}:ReferralMod
                 marginX:xsDisplay?'0':'10px', 
                 marginY:xsDisplay?'10px':'0', 
                 borderRadius:'5px',
-                boxShadow:'none'
+                boxShadow:'none',
+                backgroundColor:'#512da8'
               }}
               onClick={setFunc}
             >

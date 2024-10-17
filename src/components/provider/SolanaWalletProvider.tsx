@@ -18,7 +18,7 @@ import { useSnackbar } from 'notistack'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '@/store/wallet'
 import { RPC_ENDPOINT } from '@/anchor/constants';
-import { GlobalContext, GlobalState } from '@/anchor/global'
+import { GlobalContext, GlobalStateContext } from '@/anchor/global'
 
 type Props = {
   children: ReactNode
@@ -56,9 +56,9 @@ export default function SolanaWalletProvider({ children }: Props) {
       <ConnectionProvider endpoint={endpoint}>
         <WalletProvider wallets={wallets} onError={onError}>
           <WalletModalProvider>
-            <GlobalState>
+            <GlobalStateContext>
               {children}
-            </GlobalState>
+            </GlobalStateContext>
           </WalletModalProvider>
         </WalletProvider>
       </ConnectionProvider>
