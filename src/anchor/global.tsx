@@ -302,37 +302,49 @@ export const GlobalStateContext = ({ children }: GlobalStateProps) => {
   }
 
   const getHistory = async (timeFrame: number) => {
-
-    const lotteryData = await program?.account.lottery.all()
-      if (!lotteryData) return
-      const closedLottery = await lotteryData
-        .filter((lottery) => lottery.account.state == 1 && Number(lottery.account.timeFrame) == timeFrame)
-        .map((lottery) => ({
-          account: {
-            id: lottery.account.id,
-            timeFrame: lottery.account.timeFrame,
-            ticketPrice: lottery.account.ticketPrice,
-            maxTicket: lottery.account.maxTicket,
-            devFee: lottery.account.devFee,
-            startTime: lottery.account.startTime,
-            endTime: lottery.account.endTime,
-            state: lottery.account.state,
-            participants: lottery.account.participants.map((pubkey) =>
-              pubkey.toString()
-            ),
-            winner: lottery.account.winner,
-            prizePercent: lottery.account.prizePercent,
-            winnerPrize: lottery.account.winnerPrize,
-            realPoolAmount: lottery.account.realPoolAmount,
-            realCount: lottery.account.realCount,
-            round: lottery.account.round,
-          },
-          publicKey: lottery.publicKey,
-        }))
-        .sort((a, b) => Number(a.account.id) - Number(b.account.id));
-
-        return closedLottery;
-  }
+    const systemProgramId = SystemProgram.programId.toString();
+  
+    const lotteryData = await program?.account.lottery.all();
+    if (!lotteryData) return;
+  
+    const closedLottery = await lotteryData
+      .filter((lottery) => 
+        lottery.account.state == 1 && 
+        Number(lottery.account.timeFrame) == timeFrame
+      )
+      .filter((lottery) => {
+        const hasOnlyRealWallets = lottery.account.winner.every(
+          (winnerPubkey) => winnerPubkey.toString() !== systemProgramId
+        );
+        return hasOnlyRealWallets;
+      })
+      .map((lottery) => ({
+        account: {
+          id: lottery.account.id,
+          timeFrame: lottery.account.timeFrame,
+          ticketPrice: lottery.account.ticketPrice,
+          maxTicket: lottery.account.maxTicket,
+          devFee: lottery.account.devFee,
+          startTime: lottery.account.startTime,
+          endTime: lottery.account.endTime,
+          state: lottery.account.state,
+          participants: lottery.account.participants.map((pubkey) =>
+            pubkey.toString()
+          ),
+          winner: lottery.account.winner,
+          prizePercent: lottery.account.prizePercent,
+          winnerPrize: lottery.account.winnerPrize,
+          realPoolAmount: lottery.account.realPoolAmount,
+          realCount: lottery.account.realCount,
+          round: lottery.account.round,
+        },
+        publicKey: lottery.publicKey,
+      }))
+      .sort((a, b) => Number(a.account.id) - Number(b.account.id));
+  
+    return closedLottery;
+  };
+  
 
   const setUserReferral = async (link: string) => {
     let userData = await getUserData();

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import {
   Card,
   Button,
@@ -20,6 +20,7 @@ import { InfoModal } from './info_modal'
 import {TicketModal} from './ticket_modal'
 import {TimeFrame} from '../../anchor/constants';
 import { formatTime, getServerTime } from '@/utils/util'
+import { SocketContext } from '@/context/SocketContext';
 
 
 const card_style = {
@@ -45,6 +46,7 @@ export default function GameCard({ lottery, source }: any) {
   const [timeFrame, setTimeFrame] = useState<number>(1);
 
   const wallet = useWallet()
+  const {newGame, message} = useContext(SocketContext);
 
   const {getUserData, getLotteryData, joinToLottery, getHistory} = useGlobalState()
 
@@ -83,7 +85,8 @@ export default function GameCard({ lottery, source }: any) {
       setRestTime(restTime);
     };
     setRestfulTime();
-  }, [lottery])
+  }, [lottery, message])
+
 
   return (
     <>

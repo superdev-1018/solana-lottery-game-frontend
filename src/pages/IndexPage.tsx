@@ -29,6 +29,7 @@ import { formatTime } from '@/utils/util'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { SocketContext } from '@/context/SocketContext'
 import { toast } from 'react-toastify'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js'
 
 
 const modalStyle = {
@@ -171,7 +172,7 @@ export default function IndexPage() {
               </Link>{' '}
               won the {formatTime(Number(winnerTicker?.timeFrame))} pool at{' '}
               <Link href="#">
-                {winnerTicker?.prize.toString()}{' '}
+                {(winnerTicker?.prize/LAMPORTS_PER_SOL).toFixed(2)}{' '}
                 USDT
               </Link>
             </Typography>
@@ -217,7 +218,7 @@ export default function IndexPage() {
             >
               Deposit ticker:{' '}
               <Link
-                href={`https://explorer.solana.com/address/${depositeTicker?.depositer.toString()}?cluster=devnet`}
+                href={`https://explorer.solana.com/address/${(depositeTicker?.depositer/LAMPORTS_PER_SOL).toFixed(3)}?cluster=devnet`}
                 target="_blank"
               >
                 {depositeTicker?.depositer.toString()}

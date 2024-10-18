@@ -1,9 +1,9 @@
 import { Box, Button, List, ListItem, ListItemText, Modal, Typography } from "@mui/material"
-
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { useGlobalState } from "@/hooks/useGlobalState"
 import { useEffect, useState } from "react"
 import { formatTime } from "@/utils/util"
+import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 
 type InfoModalProps = {
     openModal: boolean,
@@ -45,8 +45,6 @@ const modalStyle = {
 export function InfoModal({openModal, handleClose, history, timeframe}:InfoModalProps){
 
   const [winHistory, setWinHistory] = useState<any | null>(null);
-
-  const {getHistory} = useGlobalState();
 
   useEffect(()=>{
     if(history){
@@ -140,19 +138,19 @@ export function InfoModal({openModal, handleClose, history, timeframe}:InfoModal
                   <ListItemText primary={`Number of participants: ${lottery.account.realCount} spots`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`Prize pool: ${lottery.account.realPoolAmount} USDT`} />
+                  <ListItemText primary={`Prize pool: ${(lottery.account.realPoolAmount/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
                   <ListItemText primary={`Winning tax: ${lottery.account.devFee}%`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[0]} = ${lottery.account.winnerPrize[0]} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[0]} = ${(lottery.account.winnerPrize[0]/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[1]} = ${lottery.account.winnerPrize[1]} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[1]} = ${(lottery.account.winnerPrize[1]/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[2]} = ${lottery.account.winnerPrize[2]} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[2]} = ${(lottery.account.winnerPrize[2]/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
                 </ListItem>
               </List>
               )): null
