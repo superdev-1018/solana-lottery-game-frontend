@@ -28,6 +28,7 @@ function InnerApp() {
 
   return (
 
+          <SocketProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <SnackbarProvider
@@ -53,6 +54,7 @@ function InnerApp() {
             </SolanaWalletProvider>
           </SnackbarProvider>
         </ThemeProvider>
+                </SocketProvider>
   )
 }
 

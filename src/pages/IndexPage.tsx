@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, Key } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Program } from '@coral-xyz/anchor'
 import { Lottery } from '@/anchor/idl'
 import {
@@ -27,6 +27,8 @@ import * as imgList from '@/assets'
 import { useGlobalState } from '@/hooks/useGlobalState'
 import { formatTime } from '@/utils/util'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+import { SocketContext } from '@/context/SocketContext'
+import { toast } from 'react-toastify'
 
 
 const modalStyle = {
@@ -64,8 +66,9 @@ export default function IndexPage() {
   const [lotteryList, setLotteryList] = useState<any[]>([])
   const [winnerTicker, setWinnerTicker] = useState<any | null>(null)
   const [depositeTicker, setDepositeTicker] = useState<any | null>(null)
-
   const [openModal, setOpenModal] = useState(false)
+
+  const {newGame, message} = useContext(SocketContext);
 
   const handleClose = () => setOpenModal(false)
 
@@ -97,7 +100,16 @@ export default function IndexPage() {
     return () => {
       clearInterval(interval)
     }
-  }, [connection])
+  }, [connection]);
+
+
+  useEffect(() => {
+    const setLottery = async () => {
+      let lotterys = await getOpenedLottery()
+      setLotteryList(lotterys)
+    }
+    setLottery()
+  }, [newGame]);
 
   useEffect(() => {
     const winnerTickerFn = async () => {
@@ -118,6 +130,12 @@ export default function IndexPage() {
       }
     }
   }, [loading])
+
+  useEffect(()=>{
+    if(message != ""){
+      toast.success(message, {position:'top-center', autoClose:5000});
+    }
+  },[message])
 
   return (
     <>
@@ -153,7 +171,7 @@ export default function IndexPage() {
               </Link>{' '}
               won the {formatTime(Number(winnerTicker?.timeFrame))} pool at{' '}
               <Link href="#">
-                {Number(winnerTicker?.prize / 1_000_000_000_00).toFixed(2)}{' '}
+                {winnerTicker?.prize.toString()}{' '}
                 USDT
               </Link>
             </Typography>

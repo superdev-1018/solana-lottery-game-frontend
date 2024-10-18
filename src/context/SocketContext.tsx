@@ -1,32 +1,28 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
-import { SOCKET_SERVER_URL } from '@/constants/socket';
+import { createContext, useEffect, useState } from "react";
+import { socket } from "@/utils/util";
 
-const SocketContext = createContext<Socket | null>(null);
+export const SocketContext = createContext({
+    newGame: false,
+    message: ""
+});
 
-export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [socket, setSocket] = useState<Socket | null>(null);
+export const SocketProvider = ({children}:any) => {
+  const [newgame, setNewGame] = useState(false);
+  const [newmsg, setMessage] = useState("");
 
-    useEffect(() => {
-        const newSocket = io(SOCKET_SERVER_URL);
-        setSocket(newSocket);
+  useEffect(() => {
+    socket.on("newGame", (data) => {
+      setNewGame(data?.newGame);
+      setMessage(data?.message);
+    });
+  }, [socket]);
 
-        return () => {
-            newSocket.disconnect();
-        };
-    }, []);
+  const store = {
+    newGame:newgame,
+    message: newmsg
+  };
 
-    return (
-        <SocketContext.Provider value={socket}>
-            {children}
-        </SocketContext.Provider>
-    );
-};
-
-export const useSocket = () => {
-    const context = useContext(SocketContext);
-    if (!context) {
-        throw new Error('useSocket must be used within a SocketProvider');
-    }
-    return context;
+  return (
+    <SocketContext.Provider value={store}>{children}</SocketContext.Provider>
+  );
 };

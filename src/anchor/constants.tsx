@@ -1,7 +1,7 @@
 import { Keypair, PublicKey } from "@solana/web3.js";
 import bs58 from 'bs58';
 export const RPC_ENDPOINT = "https://api.devnet.solana.com";
-export const PROGRAM_ID = new PublicKey("6335gXcANhi2LHintfR456frv3KC588j7bNxEoScBSMS");
+export const PROGRAM_ID = new PublicKey("4949jFzxi8rB64pScJKXQePNxzmYJtDMM17WSZQEbKSV");
 export const ADMIN_KEY = new PublicKey("85Rm7Up3AfqiSZVrugBaPxwuTaijUFxPCzpd8JScGibr");
 export const ADMIN_KEYPAIR = Keypair.fromSecretKey(bs58.decode("4ugXSRFqMvHRnapAirCPkSGrNbqokLNAzLe9ARNhNSMV8Cei9UxL5StRB3sDrPPmxdurqVkWvMERrz2XxApFB5GC"));
 export const USDT_MINT_ADDRESS = new PublicKey("HYrpV9vBvTzYRMoGfBkzjsxNQcJjWLqNUKwf5C7oy8uf");
@@ -17,3 +17,4 @@ export const DevFee = [10,9,8,7,6,5,4,3,2,1];
 
 export const ServerUrl = "http://localhost:5005";
 export const SiteUrl = "http://localhost:4200";
+export const SocketUrl = "http://localhost:4000";

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { ServerUrl } from '@/anchor/constants';
+import { io } from "socket.io-client";
+import { SocketUrl } from '@/anchor/constants';
 
 export const formatTime = (hours: number): string => {
     if (hours ==1 ) {
@@ -33,3 +35,5 @@ export const formatTime = (hours: number): string => {
         return 5000;
       }
   }
+
+  export const socket = io(SocketUrl);
