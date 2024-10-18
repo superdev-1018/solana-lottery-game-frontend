@@ -46,7 +46,7 @@ export default function GameCard({ lottery, source }: any) {
 
   const wallet = useWallet()
 
-  const { buyTicket, getUserData, getLotteryData, joinToLottery, getHistory} = useGlobalState()
+  const {getUserData, getLotteryData, joinToLottery, getHistory} = useGlobalState()
 
   const joinLottery = async () => {
     

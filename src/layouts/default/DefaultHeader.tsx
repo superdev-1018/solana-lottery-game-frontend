@@ -5,14 +5,13 @@ import {
   Container,
   Grid,
   IconButton,
-  // Link,
   Stack,
   Typography,
   useMediaQuery,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useNavigate } from 'react-router'
-import logoHorizontal from '@/assets/img/logo/logo1.png'
+import logoImg from '@/assets/img/logo/logo1.png'
 import { useRecoilValue } from 'recoil'
 import { colorModeState } from '@/store/colorMode'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
@@ -23,6 +22,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import {ReferralModal} from '../../components/main/referral_modal'
 import { useGlobalState } from '@/hooks/useGlobalState'
 import { toast } from 'react-toastify'
+import { SiteUrl } from '@/anchor/constants'
 
 
 
@@ -30,8 +30,6 @@ export default function DefaultHeader() {
   const [openModal, setOpenModal] = useState(false)
   const [referral, setReferralLink] = useState(null)
   const handleClose = () => setOpenModal(false)
-  const colorMode = useRecoilValue(colorModeState)
-  const navigate = useNavigate()
   const theme = useTheme()
   const smDisplay = useMediaQuery(theme.breakpoints.down('md'))
   const { connected, publicKey } = useWallet()
@@ -55,14 +53,14 @@ export default function DefaultHeader() {
     });
   };
  
-  const referralLink = referral ? `http://localhost:4200/?ref=${referral}` : "";
+  const referralLink = referral ? `${SiteUrl}/?ref=${referral}` : "";
   return (
     <>
       <Container maxWidth={false} sx={style.header.container}>
         <Grid container>
           <Grid item xs={12} sm={12} md={4}>
             <Box display={'flex'}  sx={style.header.logo}>
-              <Link to="/"><img src={logoHorizontal} alt="Logo"/></Link>
+              <Link to="/"><img src={logoImg} alt="Logo"/></Link>
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={4} sx={{...style.header.titleContainer, paddingY:smDisplay?'20px':''}}>
@@ -100,7 +98,7 @@ export default function DefaultHeader() {
                         sx={{paddingX:'3px'}}
                       >
                         <Typography sx={{width:'90%', overflow: 'hidden', textOverflow: 'ellipsis',}}>
-                          link: http://localhost:4200/?ref=${referral}
+                          link: {SiteUrl}/?ref=${referral}
                         </Typography>
                         <IconButton
                           sx={{
@@ -123,8 +121,8 @@ export default function DefaultHeader() {
 
                     </Stack>):<Typography onClick={() => setOpenModal(true)}>Set Referral ID</Typography>}
                 </Link>
-            </Stack>
-        ) : null}
+              </Stack>
+              ) : null}
             </Box>
           </Grid>
         </Grid>

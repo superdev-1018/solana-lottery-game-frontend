@@ -140,19 +140,19 @@ export function InfoModal({openModal, handleClose, history, timeframe}:InfoModal
                   <ListItemText primary={`Number of participants: ${lottery.account.realCount} spots`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`Prize pool: ${(lottery.account.realPoolAmount/10000000000).toFixed(3)} USDT`} />
+                  <ListItemText primary={`Prize pool: ${(lottery.account.realPoolAmount/1000000000).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
                   <ListItemText primary={`Winning tax: ${lottery.account.devFee}%`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[0]} = ${(lottery.account.winnerPrize[0]/10000000000).toFixed(3)} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[0]} = ${(lottery.account.winnerPrize[0]/1000000000).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[1]} = ${(lottery.account.winnerPrize[1]/10000000000).toFixed(3)} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[1]} = ${(lottery.account.winnerPrize[1]/1000000000).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[2]} = ${(lottery.account.winnerPrize[2]/10000000000).toFixed(3)} USDT`} />
+                  <ListItemText primary={`1: ${lottery.account.winner[2]} = ${(lottery.account.winnerPrize[2]/1000000000).toFixed(3)} USDT`} />
                 </ListItem>
               </List>
               )): null

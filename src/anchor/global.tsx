@@ -9,8 +9,7 @@ import {
 import { createContext, useEffect, useState, ReactNode } from 'react'
 import {
   getProgram,
-  globalAccountPDA,
-  lotteryKeyInfoPDA,
+  globalAccountPDA
 } from './program'
 import { BN } from 'bn.js'
 import {
@@ -268,7 +267,7 @@ export const GlobalStateContext = ({ children }: GlobalStateProps) => {
         }
         console.error(error);
       });
-      if (txHash){
+      if (typeof txHash == 'string'){ console.log(txHash,"txhash in join lottery")
         toast.success("Successfully Joined!", {position:'top-center', autoClose:7000});
       }
   }

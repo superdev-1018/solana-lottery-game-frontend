@@ -1,19 +1,8 @@
-import React, { useState, useEffect, ReactNode } from 'react'
-import {
-  Box,
-  Modal,
-  Button,
-  Typography,
-  ListItem,
-  ListItemText,
-  ListSubheader,
-  List,
-  IconButton,
-} from '@mui/material'
+import { ReactNode } from 'react'
+import {Box} from '@mui/material'
 
 import DefaultHeader from './DefaultHeader'
 import DefaultFooter from './DefaultFooter'
-import { useGlobalState } from '@/hooks/useGlobalState'
 
 type Props = {
   children: ReactNode

@@ -2,7 +2,7 @@
 # solana-lottery-game-frontend
 This is lottery frontend.
 =======
-# Epics dApp boilerplate
+# Solana Lottery dApp boilerplate
 
 A dApp boilerplate for Solana with the latest React dev environment.
 

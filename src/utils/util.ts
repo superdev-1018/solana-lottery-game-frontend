@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ServerUrl } from '@/anchor/constants';
 
 export const formatTime = (hours: number): string => {
     if (hours ==1 ) {
@@ -25,7 +26,7 @@ export const formatTime = (hours: number): string => {
 
   export const getServerTime = async (timeFrame:number) => {
       try {
-        const res = await axios.post(`http://localhost:5005/get_current_time`, { timeFrame });
+        const res = await axios.post(`${ServerUrl}/get_current_time`, { timeFrame });
         return res.data.rest_time;
       } catch (error) {
         console.log(error);

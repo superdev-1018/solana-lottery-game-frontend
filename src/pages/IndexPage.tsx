@@ -92,7 +92,7 @@ export default function IndexPage() {
     fetchLottery()
     const interval = setInterval(() => {
       setLottery()
-    }, 3600000)
+    }, 60000)
 
     return () => {
       clearInterval(interval)
@@ -146,14 +146,14 @@ export default function IndexPage() {
             >
               Winners ticker:{' '}
               <Link
-                href={`https://explorer.solana.com/address/${winnerTicker?.winner.toString()}`}
+                href={`https://explorer.solana.com/address/${winnerTicker?.winner.toString()}?cluster=devnet`}
                 target="_blank"
               >
                 {winnerTicker?.winner.toString()}
               </Link>{' '}
               won the {formatTime(Number(winnerTicker?.timeFrame))} pool at{' '}
               <Link href="#">
-                {Number(winnerTicker?.prize / 1_000_000_000_000).toFixed(2)}{' '}
+                {Number(winnerTicker?.prize / 1_000_000_000_00).toFixed(2)}{' '}
                 USDT
               </Link>
             </Typography>
@@ -199,7 +199,7 @@ export default function IndexPage() {
             >
               Deposit ticker:{' '}
               <Link
-                href={`https://explorer.solana.com/address/${depositeTicker?.depositer.toString()}`}
+                href={`https://explorer.solana.com/address/${depositeTicker?.depositer.toString()}?cluster=devnet`}
                 target="_blank"
               >
                 {depositeTicker?.depositer.toString()}

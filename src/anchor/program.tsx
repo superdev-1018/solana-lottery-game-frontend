@@ -1,7 +1,6 @@
 import {
   Program,
-  AnchorProvider,
-  web3,
+  AnchorProvider
 } from '@coral-xyz/anchor';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { ADMIN_KEY, ADMIN_KEYPAIR, PROGRAM_ID, tokenOwner } from './constants';
@@ -27,7 +26,6 @@ export const getPDA = (
 
 // Define the PDAs
 export const globalAccountPDA = getPDA([Buffer.from('GLOBAL_SETTING_SEED'), ADMIN_KEY.toBuffer()], PROGRAM_ID);
-export const lotteryKeyInfoPDA = getPDA([Buffer.from("LOTTERY_PDAKEY_INFO")], PROGRAM_ID);
 
 
 

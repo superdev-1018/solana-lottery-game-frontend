@@ -1,7 +1,7 @@
 import { Box, Button, useMediaQuery, Modal, TextField, Typography } from "@mui/material"
 import { useTheme } from '@mui/material/styles'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useGlobalState } from "@/hooks/useGlobalState"
 import { useWallet } from "@solana/wallet-adapter-react"
 
@@ -113,18 +113,26 @@ export function ReferralModal({openModal, handleClose, referralLink}:ReferralMod
               flexDirection: xsDisplay? 'column':'row'
             }}
           >
-            <TextField 
-              label="Referral ID" 
-              variant="outlined" 
+            <TextField
+              label="Referral ID"
+              variant="outlined"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '5px',
-                  backgroundColor:'white',
+                  backgroundColor: 'white',
                 },
-                width: xsDisplay?'100%':'70%'
+                width: xsDisplay ? '100%' : '70%',
+                '& .MuiInputLabel-root': { 
+                  color: 'black', 
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: 'black',
+                  fontSize: '20px',
+                  fontWeight:'bold'
+                },
               }}
-              value= {referral}
-              onChange={(e)=>handleChange(e.target.value)}
+              value={referral}
+              onChange={(e) => handleChange(e.target.value)}
             />
             <Button 
               variant="contained" 
