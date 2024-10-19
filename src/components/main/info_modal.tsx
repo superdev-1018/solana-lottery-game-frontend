@@ -2,7 +2,7 @@ import { Box, Button, List, ListItem, ListItemText, Modal, Typography } from "@m
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { useGlobalState } from "@/hooks/useGlobalState"
 import { useEffect, useState } from "react"
-import { formatTime } from "@/utils/util"
+import { formatDate, formatTime } from "@/utils/util"
 import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 
 type InfoModalProps = {
@@ -101,8 +101,8 @@ export function InfoModal({openModal, handleClose, history, timeframe}:InfoModal
             sx={{
               
               paddingY: 2,
-              overflowY: 'auto', // Enables vertical scrolling
-                overflowX: 'hidden', // Hides horizontal scrolling if not needed
+              overflowY: 'auto', 
+                overflowX: 'hidden', 
                 '&::-webkit-scrollbar': {
                   width: '12px',
                 },
@@ -117,8 +117,8 @@ export function InfoModal({openModal, handleClose, history, timeframe}:InfoModal
                     background: '#555',
                   },
                 },
-                scrollbarWidth: 'thin', // For Firefox
-                scrollbarColor: '#888 #f1f1f1', // For Firefox
+                scrollbarWidth: 'thin', 
+                scrollbarColor: '#888 #f1f1f1', 
             }}
           >
             {
@@ -132,7 +132,7 @@ export function InfoModal({openModal, handleClose, history, timeframe}:InfoModal
                 key = {index}
               >
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary="Period: 24th August, 2024 16:00 GMT" />
+                  <ListItemText primary={`Period: ${formatDate(Number(lottery.account.startTime))}`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
                   <ListItemText primary={`Number of participants: ${lottery.account.realCount} spots`} />
@@ -147,10 +147,10 @@ export function InfoModal({openModal, handleClose, history, timeframe}:InfoModal
                   <ListItemText primary={`1: ${lottery.account.winner[0]} = ${(lottery.account.winnerPrize[0]/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[1]} = ${(lottery.account.winnerPrize[1]/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
+                  <ListItemText primary={`2: ${lottery.account.winner[1]} = ${(lottery.account.winnerPrize[1]/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
                 </ListItem>
                 <ListItem sx={{ margin: 0, padding: '1px 8px' }}>
-                  <ListItemText primary={`1: ${lottery.account.winner[2]} = ${(lottery.account.winnerPrize[2]/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
+                  <ListItemText primary={`3: ${lottery.account.winner[2]} = ${(lottery.account.winnerPrize[2]/LAMPORTS_PER_SOL).toFixed(3)} USDT`} />
                 </ListItem>
               </List>
               )): null

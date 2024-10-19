@@ -69,7 +69,7 @@ export default function IndexPage() {
   const [depositeTicker, setDepositeTicker] = useState<any | null>(null)
   const [openModal, setOpenModal] = useState(false)
 
-  const {newGame, message} = useContext(SocketContext);
+  const {newGame, message, state} = useContext(SocketContext);
 
   const handleClose = () => setOpenModal(false)
 
@@ -134,7 +134,11 @@ export default function IndexPage() {
 
   useEffect(()=>{
     if(message != ""){
-      toast.success(message, {position:'top-center', autoClose:5000});
+      if(state == "success"){
+        toast.success(message, {position:'top-center', autoClose:5000});
+      } else if (state == "warning"){
+        toast.warning(message, {position:'top-center', autoClose:5000});
+      }
     }
   },[message])
 

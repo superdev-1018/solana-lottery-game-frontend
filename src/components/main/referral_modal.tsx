@@ -42,7 +42,7 @@ const modalStyle = {
 
 
 export function ReferralModal({openModal, handleClose, referralLink}:ReferralModalProps){
-    const [referral, setReferral] = useState<any | null>(null);
+    const [referral, setReferral] = useState<any | "">("");
     const theme = useTheme()
     const xsDisplay = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -123,13 +123,21 @@ export function ReferralModal({openModal, handleClose, referralLink}:ReferralMod
                 },
                 width: xsDisplay ? '100%' : '70%',
                 '& .MuiInputLabel-root': { 
-                  color: 'black', 
+                  color: 'black',
+                  transition: 'all 0.2s ease', 
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                  color: 'black',
+                  color: 'white',
                   fontSize: '20px',
-                  fontWeight:'bold'
+                  fontWeight:'bold',
+                  transform: 'translate(0, -20px) scale(0.8)',
                 },
+                '& .MuiInputLabel-root.Mui-shrink': {
+                  transform: 'translate(0, -1.5px) scale(0.75)',
+              },
+              '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+              },
               }}
               value={referral}
               onChange={(e) => handleChange(e.target.value)}
