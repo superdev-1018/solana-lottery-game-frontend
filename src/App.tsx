@@ -16,7 +16,7 @@ import SolanaWalletProvider from '@/components/provider/SolanaWalletProvider'
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { SocketProvider } from './context/SocketContext'
+import { SocketProvider } from '@/context/SocketContext'
 
 
 function InnerApp() {

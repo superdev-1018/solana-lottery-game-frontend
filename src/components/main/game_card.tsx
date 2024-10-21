@@ -18,7 +18,7 @@ import { toast } from 'react-toastify';
 import { useGlobalState } from '@/hooks/useGlobalState'
 import { InfoModal } from './info_modal'
 import {TicketModal} from './ticket_modal'
-import {TimeFrame} from '../../anchor/constants';
+import {TimeFrame} from '@/anchor/constants';
 import { formatTime, getServerTime } from '@/utils/util'
 import { SocketContext } from '@/context/SocketContext';
 

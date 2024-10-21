@@ -27,7 +27,8 @@
     "@mui/lab": "5.0.0-alpha.86",
     "@mui/material": "5.8.4",
     "@mui/x-date-pickers": "5.0.0-alpha.6",
-    "@solana/spl-token": "^0.4.8",
+    "@solana/spl-token": "^0.4.9",
+    "@solana/spl-token-metadata": "^0.1.6",
     "@solana/wallet-adapter-base": "0.9.5",
     "@solana/wallet-adapter-react": "0.15.5",
     "@solana/wallet-adapter-react-ui": "0.9.7",
@@ -74,11 +75,14 @@
     "npm-check-updates": "14.0.1",
     "npm-run-all": "4.1.5",
     "prettier": "2.7.1",
-    "typescript": "4.7.3",
+    "typescript": "^5.1.1-rc",
     "vite": "2.9.11",
     "vite-plugin-compression": "0.5.1",
     "vite-plugin-html": "3.2.0",
     "vite-plugin-pwa": "0.12.0",
     "vite-tsconfig-paths": "3.5.0"
+  },
+  "resolutions": {
+    "typescript": "^5.0.0"
   }
 }

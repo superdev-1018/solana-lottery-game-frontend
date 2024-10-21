@@ -94,13 +94,13 @@ export default function IndexPage() {
       }
     }
     fetchLottery()
-    const interval = setInterval(() => {
-      setLottery()
-    }, 60000)
+    // const interval = setInterval(() => {
+    //   setLottery()
+    // }, 60000)
 
-    return () => {
-      clearInterval(interval)
-    }
+    // return () => {
+    //   clearInterval(interval)
+    // }
   }, [connection]);
 
 
@@ -222,7 +222,7 @@ export default function IndexPage() {
             >
               Deposit ticker:{' '}
               <Link
-                href={`https://explorer.solana.com/address/${(depositeTicker?.depositer/LAMPORTS_PER_SOL).toFixed(3)}?cluster=devnet`}
+                href={`https://explorer.solana.com/address/${depositeTicker?.depositer.toString()}?cluster=devnet`}
                 target="_blank"
               >
                 {depositeTicker?.depositer.toString()}

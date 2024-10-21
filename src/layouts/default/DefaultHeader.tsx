@@ -19,7 +19,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import  * as style from '@/assets'
 import '@/assets/style/CustomWalletAdapter.css'
 import { useWallet } from '@solana/wallet-adapter-react'
-import {ReferralModal} from '../../components/main/referral_modal'
+import {ReferralModal} from '@/components/main/referral_modal'
 import { useGlobalState } from '@/hooks/useGlobalState'
 import { toast } from 'react-toastify'
 import { SiteUrl } from '@/anchor/constants'

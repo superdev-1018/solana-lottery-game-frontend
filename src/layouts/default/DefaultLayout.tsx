@@ -19,7 +19,7 @@ export default function DefaultLayout({ children }: Props) {
         style={{
           wordWrap: 'break-word',
           minHeight: 'calc(100vh - 128px)',
-          backgroundColor: `#1c1b20`,
+          backgroundColor: `#1c1b20`
         }}
       >
         <Box>{children}</Box>
