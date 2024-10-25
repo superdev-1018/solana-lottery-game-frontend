@@ -15,6 +15,6 @@ export const TicketPrice = [1,2,3,4,5,6,7,8,9,10];
 export const MaxTickets = [56,56,56,56,56,56,56,56,56,56];
 export const DevFee = [10,9,8,7,6,5,4,3,2,1];
 
-export const ServerUrl = "http://84.247.162.99:5000";
-export const SiteUrl = "http://84.247.162.99:8000";
-export const SocketUrl = "http://84.247.162.99:4000";
+export const ServerUrl = "http://localhost:5000";
+export const SiteUrl = "http://localhost:8000";
+export const SocketUrl = "http://localhost:4000";
