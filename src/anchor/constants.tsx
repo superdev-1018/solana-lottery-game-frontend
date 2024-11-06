@@ -4,7 +4,7 @@ export const RPC_ENDPOINT = "https://api.devnet.solana.com";
 export const PROGRAM_ID = new PublicKey("57KXktzp1TaWRYq1k2Qx41rSwRcHQDKpLnxxEYmwv9JX");
 export const ADMIN_KEY = new PublicKey("85Rm7Up3AfqiSZVrugBaPxwuTaijUFxPCzpd8JScGibr");
 export const ADMIN_KEYPAIR = Keypair.fromSecretKey(bs58.decode("4ugXSRFqMvHRnapAirCPkSGrNbqokLNAzLe9ARNhNSMV8Cei9UxL5StRB3sDrPPmxdurqVkWvMERrz2XxApFB5GC"));
-export const USDT_MINT_ADDRESS = new PublicKey("HYrpV9vBvTzYRMoGfBkzjsxNQcJjWLqNUKwf5C7oy8uf");
+export const USDT_MINT_ADDRESS = new PublicKey("So11111111111111111111111111111111111111112");
 export const POOL_KEYPAIR = Keypair.fromSecretKey(bs58.decode("4ugXSRFqMvHRnapAirCPkSGrNbqokLNAzLe9ARNhNSMV8Cei9UxL5StRB3sDrPPmxdurqVkWvMERrz2XxApFB5GC"));
 export const TAX_KEYPAIR = Keypair.fromSecretKey(bs58.decode("3qCAbFbjxELZWBrGSFHjYnSq38CeqqKymLXuBS7qfUypkq4QzxXdb4cRp7PtFJjbfcKDRkBxUuAfqbbC4MVrKpnK"));
 

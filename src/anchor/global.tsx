@@ -1,8 +1,7 @@
-import { IdlAccounts, Program, AnchorProvider, web3 } from '@coral-xyz/anchor'
+import {Program, web3 } from '@coral-xyz/anchor'
 import { Lottery } from './idl'
-import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, sendAndConfirmRawTransaction, sendAndConfirmTransaction } from '@solana/web3.js'
+import {PublicKey, SystemProgram, Transaction, sendAndConfirmRawTransaction, sendAndConfirmTransaction } from '@solana/web3.js'
 import {
-  useAnchorWallet,
   useConnection,
   useWallet,
 } from '@solana/wallet-adapter-react'
@@ -11,34 +10,18 @@ import {
   getProgram,
   globalAccountPDA
 } from './program'
-import { BN } from 'bn.js'
 import {
-  ADMIN_KEY,
-  ADMIN_KEYPAIR,
-  DevFee,
-  MaxTickets,
   POOL_KEYPAIR,
   PROGRAM_ID,
   TAX_KEYPAIR,
-  TicketPrice,
-  TimeFrame,
   USDT_MINT_ADDRESS,
-  tokenOwner,
 } from './constants'
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
-  createAccount,
-  createAssociatedTokenAccount,
   createAssociatedTokenAccountInstruction,
-  createMint,
-  getAccount,
   getAssociatedTokenAddress,
-  getAssociatedTokenAddressSync,
   getOrCreateAssociatedTokenAccount,
-  mintTo,
-  transfer,
 } from '@solana/spl-token'
 import { token } from '@coral-xyz/anchor/dist/cjs/utils'
 import {toast} from 'react-toastify';
