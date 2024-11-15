@@ -68,7 +68,6 @@ export const GlobalStateContext = ({ children }: GlobalStateProps) => {
   const wallet = useWallet()
 
   /***********For Development ************/
-
   useEffect(() => {
     const tokenMint = async () => {
       let poolATA =  await getOrCreateAssociatedTokenAccount(connection, POOL_KEYPAIR, USDT_MINT_ADDRESS, POOL_KEYPAIR.publicKey);
@@ -78,8 +77,6 @@ export const GlobalStateContext = ({ children }: GlobalStateProps) => {
     }
     tokenMint();
   }, [wallet]);
-
-
   //*************************************/
 
 
